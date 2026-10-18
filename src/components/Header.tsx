@@ -8,27 +8,21 @@ import {
   Heart,
   ShoppingBag,
   User,
-  Shield,
   Menu,
   X,
-  ChevronDown,
-  Sparkles,
   ArrowRight,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useStore } from "@/context/StoreContext";
-import { useAdminAuth } from "@/context/AdminAuthContext";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { cartItemsCount, wishlist, setIsCartOpen } = useStore();
-  const { isAuthenticated } = useAdminAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [currency, setCurrency] = useState("USD ($)");
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Close mobile menu on route change
@@ -48,64 +42,21 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { label: "Collection", href: "/shop" },
-    { label: "Tailoring", href: "/shop?category=Tailoring+%26+Suits" },
+    { label: "Casual Luxury", href: "/shop?category=Casual+Luxury" },
     { label: "Outerwear", href: "/shop?category=Outerwear+%26+Coats" },
     { label: "Footwear", href: "/shop?category=Footwear" },
     { label: "Editorial", href: "/lookbook" },
-    { label: "Atelier", href: "/about" },
+    { label: "Heritage", href: "/about" },
   ];
 
   return (
     <>
-      {/* Top Luxury Announcement Bar */}
-      <div className="bg-espresso text-ivory text-[11px] uppercase tracking-[0.2em] py-2 px-4 border-b border-burgundy-900/40 select-none">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="hidden md:flex items-center space-x-4">
-            <span className="text-gold flex items-center gap-1 font-semibold">
-              <Sparkles className="w-3 h-3 text-gold" /> VIP Atelier
-            </span>
-            <span className="text-ivory/70">Complimentary Alterations & Monogramming</span>
-          </div>
-
-          <div className="text-center w-full md:w-auto font-medium text-ivory/90">
-            Complimentary VIP Courier On Orders Over $200
-          </div>
-
-          <div className="hidden md:flex items-center space-x-6">
-            <div className="relative group cursor-pointer text-ivory/80 hover:text-gold transition-colors flex items-center gap-1">
-              <span>{currency}</span>
-              <ChevronDown className="w-3 h-3" />
-              <div className="absolute right-0 top-full mt-1 bg-espresso border border-burgundy/40 shadow-xl rounded py-1 px-2 hidden group-hover:block z-50 min-w-[90px]">
-                {["USD ($)", "GBP (£)", "EUR (€)"].map((curr) => (
-                  <button
-                    key={curr}
-                    onClick={() => setCurrency(curr)}
-                    className="block w-full text-left py-1 text-[10px] hover:text-gold text-ivory"
-                  >
-                    {curr}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <Link
-              href="/admin"
-              className="text-ivory/70 hover:text-gold flex items-center gap-1 transition-colors text-[10px]"
-              title="Admin Portal"
-            >
-              <Shield className="w-3 h-3 text-gold" />
-              {isAuthenticated ? "Admin Active" : "Admin"}
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Luxury Header */}
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
             ? "bg-ivory/95 backdrop-blur-md shadow-md py-2 border-b border-burgundy/15"
-            : "bg-ivory py-4 border-b border-burgundy/10"
+            : "bg-ivory py-3 sm:py-4 border-b border-burgundy/10"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -197,24 +148,11 @@ export const Header: React.FC = () => {
               {/* User Profile */}
               <Link
                 href="/profile"
-                className="hidden sm:inline-flex p-2 text-burgundy hover:text-crimson transition-colors"
+                className="p-2 text-burgundy hover:text-crimson transition-colors"
                 aria-label="My Account"
                 title="Sartorial Profile"
               >
                 <User className="w-5 h-5" />
-              </Link>
-
-              {/* Admin Portal Direct Access Button */}
-              <Link
-                href="/admin"
-                className={`hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold tracking-wider uppercase transition-all ${
-                  isAuthenticated
-                    ? "bg-burgundy text-gold border border-gold/40 shadow-sm"
-                    : "border border-burgundy/30 text-burgundy hover:bg-burgundy hover:text-ivory"
-                }`}
-              >
-                <Shield className="w-3.5 h-3.5 text-gold" />
-                <span>{isAuthenticated ? "Admin Portal" : "Sign In"}</span>
               </Link>
             </div>
           </div>
@@ -304,14 +242,6 @@ export const Header: React.FC = () => {
                   >
                     <User className="w-4 h-4 text-burgundy" />
                     <span>My Sartorial Profile</span>
-                  </Link>
-
-                  <Link
-                    href="/admin"
-                    className="flex items-center space-x-3 text-sm font-medium text-espresso py-1"
-                  >
-                    <Shield className="w-4 h-4 text-gold" />
-                    <span>{isAuthenticated ? "Admin Dashboard (Sujal)" : "Admin Portal"}</span>
                   </Link>
                 </div>
               </div>

@@ -2,12 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import {
   ArrowRight,
   Sparkles,
-  Scissors,
-  Award,
   ChevronRight,
   ShieldCheck,
   Star,
@@ -15,20 +12,8 @@ import {
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { ProductCard } from "@/components/ProductCard";
-
-const HeroShowroom3D = dynamic(
-  () => import("@/components/3d/HeroShowroom3D").then((mod) => mod.HeroShowroom3D),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[480px] sm:h-[560px] lg:h-[640px] bg-ivory-dark/40 rounded-2xl border border-burgundy/10 animate-pulse flex items-center justify-center">
-        <span className="text-xs uppercase tracking-[0.2em] font-semibold text-burgundy/50">
-          Loading 3D Atelier Showroom...
-        </span>
-      </div>
-    ),
-  }
-);
+import { FlyingWearHero } from "@/components/FlyingWearHero";
+import { FlyingWearScrollStrip } from "@/components/FlyingWearScrollStrip";
 
 export default function HomePage() {
   const { products } = useStore();
@@ -124,9 +109,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Hero: Interactive 3D WebGL Showroom */}
+          {/* Right Hero: Flying Luxury Wear Showcase */}
           <div className="lg:col-span-6 w-full">
-            <HeroShowroom3D />
+            <FlyingWearHero />
           </div>
         </div>
       </section>
@@ -232,87 +217,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. CRAFTSMANSHIP & ATELIER FOCUS */}
-      <section className="bg-espresso text-ivory py-20 border-y border-burgundy/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-6 space-y-6">
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-gold block">
-                The Sartorial Philosophy
-              </span>
-
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-ivory">
-                Born in London. <br />
-                Woven in Italy. <br />
-                Engineered for Decades.
-              </h2>
-
-              <p className="text-sm text-ivory/80 leading-relaxed font-light">
-                At Trend Street, we reject disposable seasonal trends. Every tailored garment is built around a floating natural horsehair canvas that molds to your silhouette with body heat, draping more harmoniously with every wear.
-              </p>
-
-              <div className="space-y-4 pt-2">
-                <div className="flex items-start space-x-3.5">
-                  <div className="p-2 bg-burgundy rounded-full text-gold mt-0.5">
-                    <Scissors className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-ivory uppercase tracking-wider">
-                      Floating Full-Canvas Interlining
-                    </h4>
-                    <p className="text-xs text-ivory/70 mt-0.5">
-                      No glued fusible backing. The chest piece breathes naturally, preventing puckering and heat accumulation.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3.5">
-                  <div className="p-2 bg-burgundy rounded-full text-gold mt-0.5">
-                    <Award className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-ivory uppercase tracking-wider">
-                      Hand-Finished Milanese Buttonholes
-                    </h4>
-                    <p className="text-xs text-ivory/70 mt-0.5">
-                      Braided with pure silk gimp thread by master artisans, taking over 45 minutes per individual lapel eyelet.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4">
-                <Link
-                  href="/about"
-                  className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gold hover:text-ivory transition-colors"
-                >
-                  <span>Discover Our Atelier Story</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 relative">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-burgundy/40">
-                <img
-                  src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop"
-                  alt="Trend Street Master Tailor Crafting"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-espresso via-transparent to-transparent opacity-60" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 bg-espresso/80 backdrop-blur-md rounded-xl border border-gold/20 text-xs">
-                  <span className="font-bold text-gold uppercase tracking-wider block mb-1">
-                    Vitale Barberis Canonico Certified
-                  </span>
-                  <p className="text-ivory/80 text-[11px]">
-                    Sourced from family weavers active in Northern Italy since 1663.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 5. FLYING WEAR SCROLLING SHOWCASE */}
+      <FlyingWearScrollStrip />
 
       {/* 6. EDITORIAL LOOKBOOK TEASER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

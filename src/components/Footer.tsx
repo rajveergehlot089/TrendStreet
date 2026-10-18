@@ -94,7 +94,7 @@ export const Footer: React.FC = () => {
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-start">
-              <Logo variant="ivory" size="md" showTagline={true} href="/" />
+              <Logo variant="ivory" size="lg" href="/" />
             </div>
             <p className="text-xs text-ivory/75 leading-relaxed max-w-sm">
               Trend Street is the definitive digital style hub for the modern gentleman. Cut from
