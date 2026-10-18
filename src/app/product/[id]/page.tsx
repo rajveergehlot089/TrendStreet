@@ -28,11 +28,11 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const { products, addToCart, toggleWishlist, isInWishlist } = useStore();
 
-  const product = products.find((p) => p.id === id) || products[0];
+  const product = products.find((p) => p.id === id);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string>(product?.sizes[0] || "");
-  const [selectedColor, setSelectedColor] = useState<string>(product?.colors[0]?.name || "");
+  const [selectedSize, setSelectedSize] = useState<string>(product?.sizes?.[0] || "");
+  const [selectedColor, setSelectedColor] = useState<string>(product?.colors?.[0]?.name || "");
   const [quantity, setQuantity] = useState(1);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [show3DPreview, setShow3DPreview] = useState(false);
@@ -47,11 +47,19 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-2xl font-serif font-bold text-espresso">Product Not Found</h2>
-        <Link href="/shop" className="mt-4 inline-block text-burgundy underline">
-          Return to Sartorial Collection
-        </Link>
+      <div className="max-w-2xl mx-auto px-4 py-28 text-center space-y-6">
+        <h1 className="text-3xl font-serif font-bold text-espresso">Sartorial Piece Not Found</h1>
+        <p className="text-espresso/70 text-sm max-w-md mx-auto">
+          The requested garment may have been archived or is temporarily out of season. Explore our ongoing collections or speak with our concierge.
+        </p>
+        <div className="pt-2">
+          <Link
+            href="/shop"
+            className="px-8 py-3 bg-burgundy text-ivory text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-crimson transition-colors inline-block"
+          >
+            Explore Complete Collection
+          </Link>
+        </div>
       </div>
     );
   }

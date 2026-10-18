@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Search,
   Heart,
@@ -21,6 +21,7 @@ import { useAdminAuth } from "@/context/AdminAuthContext";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { cartItemsCount, wishlist, setIsCartOpen } = useStore();
   const { isAuthenticated } = useAdminAuth();
 
@@ -108,13 +109,15 @@ export const Header: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative flex items-center justify-between">
+          <div className="relative flex items-center justify-between min-h-[58px]">
             {/* Left Nav (Desktop) / Mobile Toggle */}
-            <div className="flex items-center space-x-6 flex-1 lg:flex-initial">
+            <div className="flex items-center space-x-6 z-10">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="lg:hidden p-2 text-burgundy hover:text-crimson transition-colors"
                 aria-label="Toggle Navigation Menu"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-nav-drawer"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -139,8 +142,8 @@ export const Header: React.FC = () => {
               </nav>
             </div>
 
-            {/* CENTER LOGO (Mobile & Desktop) */}
-            <div className="flex items-center justify-center flex-1 lg:flex-initial text-center py-1">
+            {/* CENTER LOGO (Mobile & Desktop - Absolute Optical Center) */}
+            <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center text-center py-1 z-10 pointer-events-auto">
               <Logo
                 variant="burgundy"
                 size={isScrolled ? "sm" : "md"}
@@ -150,7 +153,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Right Icons: Search, Wishlist, Bag, Profile */}
-            <div className="flex items-center justify-end space-x-3 sm:space-x-5 flex-1 lg:flex-initial">
+            <div className="flex items-center justify-end space-x-3 sm:space-x-5 z-10">
               {/* Search Toggle */}
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -223,7 +226,8 @@ export const Header: React.FC = () => {
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (searchQuery.trim()) {
-                    window.location.href = `/shop?search=${encodeURIComponent(searchQuery.trim())}`;
+                    router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+                    setIsSearchOpen(false);
                   }
                 }}
                 className="relative flex items-center"
@@ -250,7 +254,13 @@ export const Header: React.FC = () => {
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 top-[73px] bg-espresso/60 backdrop-blur-sm z-50">
+          <div
+            id="mobile-nav-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Sartorial Navigation Drawer"
+            className="lg:hidden fixed inset-0 top-[73px] bg-espresso/60 backdrop-blur-sm z-50"
+          >
             <div className="bg-ivory w-4/5 max-w-sm h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto border-r border-burgundy/20">
               <div className="space-y-6">
                 <div className="pb-4 border-b border-burgundy/15 flex items-center justify-between">

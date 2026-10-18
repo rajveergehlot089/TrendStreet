@@ -49,7 +49,7 @@ export interface CartItem {
   quantity: number;
 }
 
-export type OrderStatus = "Pending" | "Confirmed" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+export type OrderStatus = "Pending" | "Confirmed" | "Processing" | "In Transit" | "Shipped" | "Delivered" | "Cancelled";
 
 export interface OrderItem {
   productId: string;

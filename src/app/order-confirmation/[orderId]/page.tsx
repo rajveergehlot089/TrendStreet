@@ -20,15 +20,32 @@ export default function OrderConfirmationPage() {
   const { orderId } = useParams();
   const { orders } = useStore();
 
-  const order = orders.find((o) => o.id === orderId) || orders[0];
+  const order = orders.find((o) => o.id === orderId);
 
   if (!order) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <h2 className="font-serif text-2xl font-bold text-espresso">Order Not Found</h2>
-        <Link href="/" className="mt-4 inline-block text-burgundy underline">
-          Return to Home
-        </Link>
+      <div className="max-w-2xl mx-auto px-4 py-24 text-center space-y-6">
+        <div className="w-16 h-16 rounded-full bg-burgundy/10 text-burgundy flex items-center justify-center mx-auto">
+          <Package className="w-8 h-8" />
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-espresso">Order Record Not Found</h1>
+        <p className="text-espresso/70 text-sm max-w-md mx-auto">
+          We could not locate an active order associated with this reference. If you recently placed an order, please review your client profile or contact our Mayfair concierge.
+        </p>
+        <div className="flex items-center justify-center gap-4 pt-2">
+          <Link
+            href="/profile"
+            className="px-6 py-2.5 bg-burgundy text-ivory text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-crimson transition-colors"
+          >
+            Client Profile
+          </Link>
+          <Link
+            href="/shop"
+            className="px-6 py-2.5 border border-burgundy/30 text-espresso text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-burgundy/5 transition-colors"
+          >
+            Explore Collection
+          </Link>
+        </div>
       </div>
     );
   }

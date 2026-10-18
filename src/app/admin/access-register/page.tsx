@@ -120,6 +120,8 @@ export default function AdminAccessRegisterPage() {
   };
 
   // SQL DDL Generator per /admin-access-register skill
+  const escapeSql = (str: string = "") => String(str || "").replace(/'/g, "''");
+
   const generateSQL = () => {
     return `-- Admin Access Register DDL & Seed
 CREATE TABLE IF NOT EXISTS admin_access_register (
@@ -153,7 +155,7 @@ CREATE TABLE IF NOT EXISTS admin_access_register (
 ${accessRegister
   .map(
     (r) =>
-      `INSERT INTO admin_access_register (system_or_tool, category, main_admin, backup_admin, department, access_level, number_of_admin_users, billing_owner, plan, seats, renewal_date, company_owned_account, shared_login, password_manager_entry, two_factor_on, last_access_review, next_access_review, offboarding_checklist_item, risk_level, status, notes) VALUES ('${r.systemOrTool}', '${r.category}', '${r.mainAdmin}', '${r.backupAdmin}', '${r.department}', '${r.accessLevel}', ${r.numberOfAdminUsers}, '${r.billingOwner}', '${r.plan}', ${r.seats}, '${r.renewalDate}', ${r.companyOwnedAccount}, ${r.sharedLogin}, '${r.passwordManagerEntry}', ${r.twoFactorOn}, '${r.lastAccessReview}', '${r.nextAccessReview}', '${r.offboardingChecklistItem}', '${r.riskLevel}', '${r.status}', '${r.notes}');`
+      `INSERT INTO admin_access_register (system_or_tool, category, main_admin, backup_admin, department, access_level, number_of_admin_users, billing_owner, plan, seats, renewal_date, company_owned_account, shared_login, password_manager_entry, two_factor_on, last_access_review, next_access_review, offboarding_checklist_item, risk_level, status, notes) VALUES ('${escapeSql(r.systemOrTool)}', '${escapeSql(r.category)}', '${escapeSql(r.mainAdmin)}', '${escapeSql(r.backupAdmin || "")}', '${escapeSql(r.department)}', '${escapeSql(r.accessLevel)}', ${Number(r.numberOfAdminUsers) || 1}, '${escapeSql(r.billingOwner || "")}', '${escapeSql(r.plan)}', ${Number(r.seats) || 1}, '${escapeSql(r.renewalDate)}', ${Boolean(r.companyOwnedAccount)}, ${Boolean(r.sharedLogin)}, '${escapeSql(r.passwordManagerEntry || "")}', ${Boolean(r.twoFactorOn)}, '${escapeSql(r.lastAccessReview)}', '${escapeSql(r.nextAccessReview)}', '${escapeSql(r.offboardingChecklistItem || "")}', '${escapeSql(r.riskLevel)}', '${escapeSql(r.status)}', '${escapeSql(r.notes || "")}');`
   )
   .join("\n")}`;
   };

@@ -54,8 +54,41 @@ export default function CheckoutPage() {
     bankName: "Barclays Private Wealth",
   });
 
+  const [step1Error, setStep1Error] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (step1Error) setStep1Error(null);
+  };
+
+  const validateAndProceedToStep2 = () => {
+    if (
+      !formData.fullName.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.address.trim() ||
+      !formData.city.trim() ||
+      !formData.postalCode.trim()
+    ) {
+      setStep1Error("Please complete all required shipping fields before continuing.");
+      return false;
+    }
+    setStep1Error(null);
+    setStep(2);
+    return true;
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (step === 1) {
+      validateAndProceedToStep2();
+      return;
+    }
+    if (step === 2) {
+      setStep(3);
+      return;
+    }
+    handleSubmitOrder(e);
   };
 
   const handleSubmitOrder = (e: React.FormEvent) => {
@@ -158,7 +191,7 @@ export default function CheckoutPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Main Interactive Checkout Form */}
-        <form onSubmit={handleSubmitOrder} className="lg:col-span-8 space-y-6">
+        <form onSubmit={handleFormSubmit} className="lg:col-span-8 space-y-6">
           {/* STEP 1: SHIPPING ADDRESS */}
           {step === 1 && (
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-burgundy/15 shadow-xs space-y-5 animate-in fade-in duration-300">
@@ -171,10 +204,19 @@ export default function CheckoutPage() {
                 </span>
               </div>
 
+              {step1Error && (
+                <div className="p-3 bg-crimson/10 border border-crimson/30 rounded-lg text-xs text-crimson font-medium">
+                  {step1Error}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="sm:col-span-2">
-                  <label className="block font-semibold text-espresso mb-1">Full Legal Name</label>
+                  <label htmlFor="checkout-fullName" className="block font-semibold text-espresso mb-1">
+                    Full Legal Name
+                  </label>
                   <input
+                    id="checkout-fullName"
                     type="text"
                     name="fullName"
                     required
@@ -185,8 +227,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-espresso mb-1">Email Address (Order Confirmation)</label>
+                  <label htmlFor="checkout-email" className="block font-semibold text-espresso mb-1">
+                    Email Address (Order Confirmation)
+                  </label>
                   <input
+                    id="checkout-email"
                     type="email"
                     name="email"
                     required
@@ -197,8 +242,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-espresso mb-1">Phone Number (Courier Dispatch)</label>
+                  <label htmlFor="checkout-phone" className="block font-semibold text-espresso mb-1">
+                    Phone Number (Courier Dispatch)
+                  </label>
                   <input
+                    id="checkout-phone"
                     type="tel"
                     name="phone"
                     required
@@ -209,8 +257,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block font-semibold text-espresso mb-1">Street Address</label>
+                  <label htmlFor="checkout-address" className="block font-semibold text-espresso mb-1">
+                    Street Address
+                  </label>
                   <input
+                    id="checkout-address"
                     type="text"
                     name="address"
                     required
@@ -221,8 +272,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-espresso mb-1">Apartment / Suite / Floor</label>
+                  <label htmlFor="checkout-apartment" className="block font-semibold text-espresso mb-1">
+                    Apartment / Suite / Floor
+                  </label>
                   <input
+                    id="checkout-apartment"
                     type="text"
                     name="apartment"
                     value={formData.apartment}
@@ -232,8 +286,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-espresso mb-1">City</label>
+                  <label htmlFor="checkout-city" className="block font-semibold text-espresso mb-1">
+                    City
+                  </label>
                   <input
+                    id="checkout-city"
                     type="text"
                     name="city"
                     required
@@ -244,8 +301,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-espresso mb-1">Postal / ZIP Code</label>
+                  <label htmlFor="checkout-postalCode" className="block font-semibold text-espresso mb-1">
+                    Postal / ZIP Code
+                  </label>
                   <input
+                    id="checkout-postalCode"
                     type="text"
                     name="postalCode"
                     required
@@ -256,8 +316,11 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-espresso mb-1">Country / Region</label>
+                  <label htmlFor="checkout-country" className="block font-semibold text-espresso mb-1">
+                    Country / Region
+                  </label>
                   <select
+                    id="checkout-country"
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
@@ -278,7 +341,7 @@ export default function CheckoutPage() {
               <div className="pt-4 flex justify-end">
                 <button
                   type="button"
-                  onClick={() => setStep(2)}
+                  onClick={validateAndProceedToStep2}
                   className="py-3 px-8 bg-burgundy hover:bg-crimson text-ivory text-xs font-bold uppercase tracking-[0.2em] rounded-lg transition-colors flex items-center gap-2 shadow-md"
                 >
                   <span>Continue to Delivery</span>
@@ -434,10 +497,13 @@ export default function CheckoutPage() {
               {formData.paymentMethod === "card" && (
                 <div className="space-y-4 p-4 bg-ivory rounded-xl border border-burgundy/10 text-xs">
                   <div>
-                    <label className="block font-semibold text-espresso mb-1">Card Number</label>
+                    <label htmlFor="checkout-cardNumber" className="block font-semibold text-espresso mb-1">
+                      Card Number
+                    </label>
                     <div className="relative">
                       <CreditCard className="absolute left-3 top-2.5 w-4 h-4 text-espresso/40" />
                       <input
+                        id="checkout-cardNumber"
                         type="text"
                         name="cardNumber"
                         value={formData.cardNumber}
@@ -449,8 +515,11 @@ export default function CheckoutPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-semibold text-espresso mb-1">Expiry Date</label>
+                      <label htmlFor="checkout-cardExp" className="block font-semibold text-espresso mb-1">
+                        Expiry Date
+                      </label>
                       <input
+                        id="checkout-cardExp"
                         type="text"
                         name="cardExp"
                         value={formData.cardExp}
@@ -459,8 +528,11 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold text-espresso mb-1">CVV / CVC</label>
+                      <label htmlFor="checkout-cardCvv" className="block font-semibold text-espresso mb-1">
+                        CVV / CVC
+                      </label>
                       <input
+                        id="checkout-cardCvv"
                         type="password"
                         name="cardCvv"
                         maxLength={4}
@@ -472,8 +544,11 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-espresso mb-1">Cardholder Name</label>
+                    <label htmlFor="checkout-cardName" className="block font-semibold text-espresso mb-1">
+                      Cardholder Name
+                    </label>
                     <input
+                      id="checkout-cardName"
                       type="text"
                       name="cardName"
                       value={formData.cardName}
@@ -487,8 +562,11 @@ export default function CheckoutPage() {
               {/* UPI Inputs */}
               {formData.paymentMethod === "upi" && (
                 <div className="p-4 bg-ivory rounded-xl border border-burgundy/10 text-xs space-y-3">
-                  <label className="block font-semibold text-espresso">Virtual Payment Address (VPA / UPI ID)</label>
+                  <label htmlFor="checkout-upiId" className="block font-semibold text-espresso">
+                    Virtual Payment Address (VPA / UPI ID)
+                  </label>
                   <input
+                    id="checkout-upiId"
                     type="text"
                     name="upiId"
                     value={formData.upiId}
@@ -505,8 +583,11 @@ export default function CheckoutPage() {
               {/* Netbanking Inputs */}
               {formData.paymentMethod === "netbanking" && (
                 <div className="p-4 bg-ivory rounded-xl border border-burgundy/10 text-xs space-y-3">
-                  <label className="block font-semibold text-espresso">Select Registered Banking Institution</label>
+                  <label htmlFor="checkout-bankName" className="block font-semibold text-espresso">
+                    Select Registered Banking Institution
+                  </label>
                   <select
+                    id="checkout-bankName"
                     name="bankName"
                     value={formData.bankName}
                     onChange={handleChange}

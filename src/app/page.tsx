@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   ArrowRight,
   Sparkles,
@@ -14,7 +15,20 @@ import {
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { ProductCard } from "@/components/ProductCard";
-import { HeroShowroom3D } from "@/components/3d/HeroShowroom3D";
+
+const HeroShowroom3D = dynamic(
+  () => import("@/components/3d/HeroShowroom3D").then((mod) => mod.HeroShowroom3D),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[480px] sm:h-[560px] lg:h-[640px] bg-ivory-dark/40 rounded-2xl border border-burgundy/10 animate-pulse flex items-center justify-center">
+        <span className="text-xs uppercase tracking-[0.2em] font-semibold text-burgundy/50">
+          Loading 3D Atelier Showroom...
+        </span>
+      </div>
+    ),
+  }
+);
 
 export default function HomePage() {
   const { products } = useStore();

@@ -21,6 +21,7 @@ const STATUS_LIST: OrderStatus[] = [
   "Pending",
   "Confirmed",
   "Processing",
+  "In Transit",
   "Shipped",
   "Delivered",
   "Cancelled",

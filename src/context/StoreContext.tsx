@@ -125,7 +125,7 @@ const INITIAL_ORDERS: Order[] = [
     id: "ord-1002",
     orderNumber: "TS-2026-9214",
     createdAt: "2026-10-18T09:15:00Z",
-    status: "In Transit" as unknown as OrderStatus,
+    status: "In Transit",
     items: [
       {
         productId: "ts-004",

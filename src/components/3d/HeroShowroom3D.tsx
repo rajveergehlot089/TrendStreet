@@ -50,6 +50,7 @@ const FABRIC_SWATCHES: Swatch[] = [
 
 export const HeroShowroom3D: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const updateFabricRef = useRef<((swatch: Swatch) => void) | null>(null);
   const [activeSwatch, setActiveSwatch] = useState<Swatch>(FABRIC_SWATCHES[0]);
   const [isRotating, setIsRotating] = useState<boolean>(true);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
@@ -132,19 +133,18 @@ export const HeroShowroom3D: React.FC = () => {
 
     // Peak Lapels (Architectural Tailoring details)
     const lapelLeftGeo = new THREE.ConeGeometry(0.35, 1.2, 4);
-    const lapelLeft = new THREE.Mesh(
-      lapelLeftGeo,
-      new THREE.MeshStandardMaterial({
-        color: new THREE.Color(activeSwatch.specular),
-        roughness: 0.5,
-        metalness: 0.2,
-      })
-    );
+    const lapelMat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(activeSwatch.specular),
+      roughness: 0.5,
+      metalness: 0.2,
+    });
+    const lapelLeft = new THREE.Mesh(lapelLeftGeo, lapelMat);
     lapelLeft.position.set(-0.35, 0.6, 0.55);
     lapelLeft.rotation.set(0.2, -0.3, -0.4);
     group.add(lapelLeft);
 
-    const lapelRight = lapelLeft.clone();
+    const lapelRightGeo = new THREE.ConeGeometry(0.35, 1.2, 4);
+    const lapelRight = new THREE.Mesh(lapelRightGeo, lapelMat);
     lapelRight.position.set(0.35, 0.6, 0.55);
     lapelRight.rotation.set(0.2, 0.3, 0.4);
     group.add(lapelRight);
@@ -278,8 +278,8 @@ export const HeroShowroom3D: React.FC = () => {
 
     window.addEventListener("resize", handleResize);
 
-    // Save references to update material when swatch changes
-    (container as unknown as { updateFabric: (swatch: Swatch) => void }).updateFabric = (swatch: Swatch) => {
+    // Save reference to update material when swatch changes
+    updateFabricRef.current = (swatch: Swatch) => {
       const color = new THREE.Color(swatch.color);
       const specular = new THREE.Color(swatch.specular);
 
@@ -291,8 +291,7 @@ export const HeroShowroom3D: React.FC = () => {
       clothMat.roughness = swatch.roughness;
       clothMat.metalness = swatch.metalness;
 
-      (lapelLeft.material as THREE.MeshStandardMaterial).color = specular;
-      (lapelRight.material as THREE.MeshStandardMaterial).color = specular;
+      lapelMat.color = specular;
     };
 
     return () => {
@@ -306,18 +305,28 @@ export const HeroShowroom3D: React.FC = () => {
       window.removeEventListener("touchend", onTouchEnd);
 
       cancelAnimationFrame(animationFrameId);
+
+      // Cleanly dispose Three.js geometries to prevent GPU memory leaks
+      [torsoGeometry, shoulderGeo, lapelLeftGeo, lapelRightGeo, ringGeo, clothGeo].forEach((geo) => {
+        geo.dispose();
+      });
+
+      // Cleanly dispose Three.js materials
+      [torsoMaterial, lapelMat, goldRingMat, clothMat].forEach((mat) => {
+        mat.dispose();
+      });
+
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
+      updateFabricRef.current = null;
     };
   }, []);
 
   // Update fabric when activeSwatch changes
   useEffect(() => {
-    if (mountRef.current && (mountRef.current as unknown as { updateFabric?: (s: Swatch) => void }).updateFabric) {
-      (mountRef.current as unknown as { updateFabric: (s: Swatch) => void }).updateFabric(activeSwatch);
-    }
+    updateFabricRef.current?.(activeSwatch);
   }, [activeSwatch]);
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Shield, Lock, Mail, ArrowRight, AlertCircle, CheckCircle, Sparkles } from "lucide-react";
@@ -11,17 +11,17 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const { login, isAuthenticated } = useAdminAuth();
 
-  const [adminId, setAdminId] = useState("sujal@.com");
-  const [password, setPassword] = useState("radhasolanki");
+  const [adminId, setAdminId] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // If already authenticated, redirect
-  if (isAuthenticated) {
-    if (typeof window !== "undefined") {
+  // If already authenticated, redirect safely via useEffect
+  useEffect(() => {
+    if (isAuthenticated) {
       router.push("/admin");
     }
-  }
+  }, [isAuthenticated, router]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +133,19 @@ export default function AdminLoginPage() {
 
           {/* Credentials Helper Callout */}
           <div className="p-3.5 bg-burgundy/10 border border-burgundy/20 rounded-xl text-[11px] text-espresso/80 space-y-1">
-            <span className="font-bold text-burgundy block">Configured Credentials:</span>
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-burgundy block">Configured Credentials:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setAdminId("sujal@.com");
+                  setPassword("radhasolanki");
+                }}
+                className="text-[10px] text-burgundy underline hover:text-crimson font-medium"
+              >
+                Auto-fill
+              </button>
+            </div>
             <p>Admin ID: <strong className="font-mono text-espresso">sujal@.com</strong></p>
             <p>Password: <strong className="font-mono text-espresso">radhasolanki</strong></p>
           </div>
