@@ -69,10 +69,10 @@ export const FlyingWearScrollStrip: React.FC = () => {
             <span className="text-xs font-semibold text-ivory/80 block">$1,350</span>
           </div>
           <Link
-            href="/shop?category=Tailoring+%26+Suits"
+            href="/shop?category=Jackets"
             className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gold hover:text-ivory transition-colors"
           >
-            <span>Explore Silhouette</span>
+            <span>Explore Jackets</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </motion.div>
@@ -99,15 +99,15 @@ export const FlyingWearScrollStrip: React.FC = () => {
           </div>
           <div className="mt-4 space-y-1">
             <span className="text-[10px] uppercase tracking-widest text-gold block font-semibold">
-              Pure Noble Fiber
+              Oversized Silhouette
             </span>
             <h4 className="font-serif text-lg font-bold text-ivory">
-              Double-Faced Cashmere Coat
+              Double-Faced Coat
             </h4>
-            <span className="text-sm font-semibold text-gold block">$1,850</span>
+            <span className="text-sm font-semibold text-gold block">$1,450</span>
           </div>
           <Link
-            href="/shop?category=Outerwear+%26+Coats"
+            href="/shop?category=Oversized"
             className="mt-4 py-2 px-6 bg-gold hover:bg-gold-light text-espresso text-xs font-bold uppercase tracking-widest rounded-lg transition-colors inline-flex items-center gap-1.5 shadow-md"
           >
             <span>Acquire Piece</span>
@@ -115,15 +115,15 @@ export const FlyingWearScrollStrip: React.FC = () => {
           </Link>
         </motion.div>
 
-        {/* Item 3: Floating Goodyear Oxford Shoes */}
+        {/* Item 3: Floating Shibuya Carpenter Jeans */}
         <motion.div
           style={{ x: xRight, rotate: rotateRight }}
           className="relative group p-6 rounded-3xl bg-ivory/5 backdrop-blur-md border border-ivory/10 hover:border-gold/40 transition-all flex flex-col items-center text-center"
         >
           <div className="relative w-48 h-48 sm:w-56 sm:h-56">
             <motion.img
-              src="/flying-wear-shoes.png"
-              alt="Flying St. James Oxfords"
+              src="/flying-wear-jeans.png"
+              alt="Flying Shibuya Relaxed Carpenter Jeans"
               animate={{
                 y: [0, -10, 0],
                 rotate: [0, 3, -1, 0],
@@ -134,18 +134,18 @@ export const FlyingWearScrollStrip: React.FC = () => {
           </div>
           <div className="mt-4 space-y-1">
             <span className="text-[10px] uppercase tracking-widest text-gold block font-semibold">
-              Bespoke Northampton
+              Okayama Redline Selvedge
             </span>
             <h4 className="font-serif text-base font-bold text-ivory">
-              Goodyear Welted Oxfords
+              Relaxed Carpenter Denim
             </h4>
-            <span className="text-xs font-semibold text-ivory/80 block">$680</span>
+            <span className="text-xs font-semibold text-ivory/80 block">$320</span>
           </div>
           <Link
-            href="/shop?category=Footwear"
+            href="/shop?category=Jeans"
             className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gold hover:text-ivory transition-colors"
           >
-            <span>Explore Footwear</span>
+            <span>Explore Denim</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </motion.div>

@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   ArrowRight,
+  Flame,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useStore } from "@/context/StoreContext";
@@ -40,12 +41,24 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { label: "Collection", href: "/shop" },
-    { label: "Casual Luxury", href: "/shop?category=Casual+Luxury" },
-    { label: "Outerwear", href: "/shop?category=Outerwear+%26+Coats" },
-    { label: "Footwear", href: "/shop?category=Footwear" },
-    { label: "Editorial", href: "/lookbook" },
+  // Exclusively 4 core sections
+  const leftNavLinks = [
+    { label: "Oversized", href: "/shop?category=Oversized" },
+    { label: "Jeans", href: "/shop?category=Jeans" },
+  ];
+
+  const rightNavLinks = [
+    { label: "Boxy Fit", href: "/shop?category=Boxy+Fit" },
+    { label: "Jackets", href: "/shop?category=Jackets" },
+  ];
+
+  const allNavLinks = [
+    { label: "All Drops", href: "/shop" },
+    { label: "Oversized", href: "/shop?category=Oversized" },
+    { label: "Jeans", href: "/shop?category=Jeans" },
+    { label: "Boxy Fit", href: "/shop?category=Boxy+Fit" },
+    { label: "Jackets", href: "/shop?category=Jackets" },
+    { label: "Lookbook", href: "/lookbook" },
     { label: "Heritage", href: "/about" },
   ];
 
@@ -60,12 +73,12 @@ export const Header: React.FC = () => {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative flex items-center justify-between min-h-[58px]">
+          <div className="flex items-center justify-between min-h-[58px]">
             {/* Left Nav (Desktop) / Mobile Toggle */}
-            <div className="flex items-center space-x-6 z-10">
+            <div className="flex-1 flex items-center justify-start space-x-6">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 text-burgundy hover:text-crimson transition-colors"
+                className="lg:hidden p-2 text-burgundy hover:text-crimson transition-colors -ml-2"
                 aria-label="Toggle Navigation Menu"
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-nav-drawer"
@@ -73,16 +86,16 @@ export const Header: React.FC = () => {
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
 
-              <nav className="hidden lg:flex items-center space-x-7">
-                {navLinks.map((link) => {
+              <nav className="hidden lg:flex items-center space-x-8">
+                {leftNavLinks.map((link) => {
                   const isActive = pathname === link.href;
                   return (
                     <Link
                       key={link.label}
                       href={link.href}
-                      className={`text-xs font-semibold uppercase tracking-[0.16em] transition-colors relative py-1 ${
+                      className={`text-xs font-bold uppercase tracking-[0.2em] transition-colors relative py-1 ${
                         isActive
-                          ? "text-crimson font-bold after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-crimson"
+                          ? "text-crimson font-black after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-crimson"
                           : "text-espresso/90 hover:text-crimson"
                       }`}
                     >
@@ -93,18 +106,36 @@ export const Header: React.FC = () => {
               </nav>
             </div>
 
-            {/* CENTER LOGO (Mobile & Desktop - Absolute Optical Center) */}
-            <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center text-center py-1 z-10 pointer-events-auto">
+            {/* CENTER LOGO (Dedicated Isolated Center - Guaranteed No Overlapping) */}
+            <div className="flex-shrink-0 flex items-center justify-center px-4">
               <Logo
                 variant="burgundy"
                 size={isScrolled ? "sm" : "md"}
-                showTagline={!isScrolled}
                 href="/"
               />
             </div>
 
-            {/* Right Icons: Search, Wishlist, Bag, Profile */}
-            <div className="flex items-center justify-end space-x-3 sm:space-x-5 z-10">
+            {/* Right Nav (Desktop) & Action Icons */}
+            <div className="flex-1 flex items-center justify-end space-x-3 sm:space-x-6">
+              <nav className="hidden lg:flex items-center space-x-8 mr-2">
+                {rightNavLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className={`text-xs font-bold uppercase tracking-[0.2em] transition-colors relative py-1 ${
+                        isActive
+                          ? "text-crimson font-black after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-crimson"
+                          : "text-espresso/90 hover:text-crimson"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
               {/* Search Toggle */}
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -150,7 +181,7 @@ export const Header: React.FC = () => {
                 href="/profile"
                 className="p-2 text-burgundy hover:text-crimson transition-colors"
                 aria-label="My Account"
-                title="Sartorial Profile"
+                title="Client Profile"
               >
                 <User className="w-5 h-5" />
               </Link>
@@ -173,7 +204,7 @@ export const Header: React.FC = () => {
                 <Search className="absolute left-4 w-5 h-5 text-burgundy/50" />
                 <input
                   type="text"
-                  placeholder="Search Savile Row Tailoring, Tuscan Suede, Silk Shirts, Goodyear Oxfords..."
+                  placeholder="Search Oversized Hoodies, Baggy Jeans, Boxy Knits, Suede Jackets..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
@@ -196,14 +227,15 @@ export const Header: React.FC = () => {
             id="mobile-nav-drawer"
             role="dialog"
             aria-modal="true"
-            aria-label="Sartorial Navigation Drawer"
+            aria-label="Navigation Drawer"
             className="lg:hidden fixed inset-0 top-[73px] bg-espresso/60 backdrop-blur-sm z-50"
           >
             <div className="bg-ivory w-4/5 max-w-sm h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto border-r border-burgundy/20">
               <div className="space-y-6">
                 <div className="pb-4 border-b border-burgundy/15 flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-[0.2em] font-bold text-burgundy">
-                    Sartorial Menu
+                  <span className="text-xs uppercase tracking-[0.2em] font-bold text-burgundy flex items-center gap-1.5">
+                    <Flame className="w-3.5 h-3.5 text-crimson" />
+                    <span>The Silhouettes</span>
                   </span>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -215,11 +247,11 @@ export const Header: React.FC = () => {
                 </div>
 
                 <nav className="flex flex-col space-y-4">
-                  {navLinks.map((link) => (
+                  {allNavLinks.map((link) => (
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="text-base font-semibold uppercase tracking-widest text-espresso hover:text-crimson transition-colors flex items-center justify-between py-2 border-b border-ivory-dark"
+                      className="text-base font-bold uppercase tracking-widest text-espresso hover:text-crimson transition-colors flex items-center justify-between py-2 border-b border-ivory-dark"
                     >
                       <span>{link.label}</span>
                       <ArrowRight className="w-4 h-4 text-burgundy/40" />
@@ -241,16 +273,16 @@ export const Header: React.FC = () => {
                     className="flex items-center space-x-3 text-sm font-medium text-espresso py-1"
                   >
                     <User className="w-4 h-4 text-burgundy" />
-                    <span>My Sartorial Profile</span>
+                    <span>Client Profile</span>
                   </Link>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-burgundy/15 text-xs text-espresso/70 space-y-2">
                 <p className="font-semibold text-burgundy uppercase tracking-wider">
-                  Trend Street Concierge
+                  Trend Street Studio
                 </p>
-                <p>Private Alterations & Stylist: +44 20 7946 0912</p>
+                <p>Oversized • Jeans • Boxy Fit • Jackets</p>
                 <p>concierge@trendstreet.com</p>
               </div>
             </div>

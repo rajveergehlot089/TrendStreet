@@ -138,28 +138,23 @@ export const Footer: React.FC = () => {
             </h5>
             <ul className="space-y-2 text-xs text-ivory/80">
               <li>
-                <Link href="/shop?category=Tailoring+%26+Suits" className="hover:text-gold transition-colors">
-                  Bespoke Tailoring
+                <Link href="/shop?category=Oversized" className="hover:text-gold transition-colors">
+                  Oversized Silhouettes
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Outerwear+%26+Coats" className="hover:text-gold transition-colors">
-                  Cashmere Coats
+                <Link href="/shop?category=Jeans" className="hover:text-gold transition-colors">
+                  Selvedge & Baggy Jeans
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Shirts+%26+Polos" className="hover:text-gold transition-colors">
-                  Sea Island Shirts
+                <Link href="/shop?category=Boxy+Fit" className="hover:text-gold transition-colors">
+                  Boxy Fit Essentials
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Footwear" className="hover:text-gold transition-colors">
-                  Goodyear-Welted Footwear
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop?category=Accessories" className="hover:text-gold transition-colors">
-                  Silk & Leather Accessories
+                <Link href="/shop?category=Jackets" className="hover:text-gold transition-colors">
+                  Structural Jackets
                 </Link>
               </li>
               <li>

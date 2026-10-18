@@ -18,13 +18,10 @@ import { useStore } from "@/context/StoreContext";
 import { Product, ProductCategory } from "@/types/store";
 
 const CATEGORIES: ProductCategory[] = [
-  "Tailoring & Suits",
-  "Casual Luxury",
-  "Outerwear & Coats",
-  "Shirts & Polos",
-  "Trousers & Chinos",
-  "Footwear",
-  "Accessories",
+  "Oversized",
+  "Jeans",
+  "Boxy Fit",
+  "Jackets",
 ];
 
 export default function AdminProductsPage() {
@@ -39,9 +36,9 @@ export default function AdminProductsPage() {
   const [newForm, setNewForm] = useState({
     name: "",
     subtitle: "",
-    price: 650,
-    originalPrice: 750,
-    category: "Tailoring & Suits" as ProductCategory,
+    price: 320,
+    originalPrice: 380,
+    category: "Oversized" as ProductCategory,
     description: "",
     details: "100% Super 150s Wool\nFull floating canvas interlining\nHand-finished buttonholes",
     fabric: "Super 150s Italian Wool",
@@ -93,9 +90,9 @@ export default function AdminProductsPage() {
     setNewForm({
       name: "",
       subtitle: "",
-      price: 650,
-      originalPrice: 750,
-      category: "Tailoring & Suits",
+      price: 320,
+      originalPrice: 380,
+      category: "Oversized",
       description: "",
       details: "100% Super 150s Wool\nFull floating canvas interlining",
       fabric: "Super 150s Italian Wool",

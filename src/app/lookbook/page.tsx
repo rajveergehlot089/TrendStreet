@@ -23,41 +23,41 @@ interface LookbookItem {
 const LOOKBOOK_DATA: LookbookItem[] = [
   {
     id: "look-1",
-    title: "The Mayfair Black-Tie Dialogue",
-    season: "Look 01 — Eveningwear",
-    narrative: "An unyielding exploration of peak lapel architecture. Sourced from Vitale Barberis Canonico Super 160s wool and paired with pure silk grosgrain facings.",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1400&auto=format&fit=crop",
+    title: "The Shibuya Heavyweight Streetwear Stance",
+    season: "Look 01 — Oversized & Denim",
+    narrative: "An unyielding exploration of volume and proportion. The 320gsm Mayfair heavyweight tee paired with relaxed 14oz Japanese redline selvedge carpenter denim.",
+    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1400&auto=format&fit=crop",
     hotspots: [
       {
         productId: "ts-001",
-        label: "The Mayfair Peak Lapel Tuxedo ($1,450)",
+        label: "Mayfair Heavyweight Tee ($160)",
         x: 48,
         y: 45,
       },
       {
-        productId: "ts-010",
-        label: "Mulberry Silk Pocket Square ($120)",
-        x: 56,
-        y: 36,
+        productId: "ts-004",
+        label: "Shibuya Carpenter Jeans ($320)",
+        x: 52,
+        y: 75,
       },
     ],
   },
   {
     id: "look-2",
-    title: "Tuscan Sprezzatura in Cashmere & Suede",
-    season: "Look 02 — Weekend Outerwear",
-    narrative: "Effortless Italian nonchalance. The butter-soft lambskin suede bomber layered over an open-collar Mulberry silk resort shirt and tapered flannel trousers.",
+    title: "Tokyo Brutalism in French Terry & Suede",
+    season: "Look 02 — Volume Layering",
+    narrative: "Supple Florentine lambskin suede bomber jacket layered effortlessly over our 520gsm double-walled loopback French terry oversized hoodie.",
     image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1400&auto=format&fit=crop",
     hotspots: [
       {
-        productId: "ts-004",
-        label: "Tuscan Suede Flight Bomber ($1,250)",
+        productId: "ts-010",
+        label: "Tuscan Suede Flight Jacket ($1,250)",
         x: 52,
         y: 42,
       },
       {
-        productId: "ts-005",
-        label: "Riviera Mulberry Silk Shirt ($380)",
+        productId: "ts-002",
+        label: "Tokyo Oversized Hoodie ($340)",
         x: 48,
         y: 58,
       },
@@ -65,20 +65,20 @@ const LOOKBOOK_DATA: LookbookItem[] = [
   },
   {
     id: "look-3",
-    title: "The Architectural Winter Overcoat",
-    season: "Look 03 — Savile Heavyweight",
-    narrative: "Double-faced cashmere that requires no lining. Hand-split seams taking 18 hours per garment, falling with weightless insulation over bespoke flannel tailoring.",
-    image: "https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=1400&auto=format&fit=crop",
+    title: "The Boxy Cut & Selvedge Denim Narrative",
+    season: "Look 03 — Geometric Proportions",
+    narrative: "Sharp dropped shoulders and a cropped square hem. High-density mercerized poplin overshirt meeting Kurabo mill rigid raw denim with natural stacked puddles.",
+    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1400&auto=format&fit=crop",
     hotspots: [
       {
-        productId: "ts-003",
-        label: "Double-Faced Cashmere Overcoat ($1,850)",
+        productId: "ts-007",
+        label: "Boxy Heavyweight Poplin Shirt ($220)",
         x: 50,
         y: 35,
       },
       {
-        productId: "ts-007",
-        label: "Biella Pleated Flannel Trousers ($440)",
+        productId: "ts-006",
+        label: "Raw Indigo Baggy Jeans ($340)",
         x: 52,
         y: 75,
       },
@@ -105,10 +105,10 @@ export default function LookbookPage() {
           Autumn / Winter 2026 Editorial
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl font-bold text-espresso">
-          The Savile & Milan Dialogue
+          The Volume & Structure Dialogue
         </h1>
         <p className="text-xs sm:text-sm text-espresso/70 leading-relaxed font-light">
-          Tap the glowing sartorial pins on any look to discover the exact garments, fabric compositions, and add them directly to your wardrobe.
+          Tap the glowing pins on any look to discover the exact Oversized, Jeans, Boxy Fit, and Jacket garments and claim them directly.
         </p>
       </div>
 

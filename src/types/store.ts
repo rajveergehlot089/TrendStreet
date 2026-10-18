@@ -1,11 +1,8 @@
 export type ProductCategory =
-  | "Tailoring & Suits"
-  | "Casual Luxury"
-  | "Outerwear & Coats"
-  | "Shirts & Polos"
-  | "Trousers & Chinos"
-  | "Footwear"
-  | "Accessories";
+  | "Oversized"
+  | "Jeans"
+  | "Boxy Fit"
+  | "Jackets";
 
 export interface Review {
   id: string;

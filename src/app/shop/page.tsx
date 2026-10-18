@@ -16,16 +16,13 @@ import { ProductCard } from "@/components/ProductCard";
 import { ProductCategory } from "@/types/store";
 
 const ALL_CATEGORIES: ProductCategory[] = [
-  "Tailoring & Suits",
-  "Casual Luxury",
-  "Outerwear & Coats",
-  "Shirts & Polos",
-  "Trousers & Chinos",
-  "Footwear",
-  "Accessories",
+  "Oversized",
+  "Jeans",
+  "Boxy Fit",
+  "Jackets",
 ];
 
-const ALL_SIZES = ["38R", "40R", "42R", "44R", "S", "M", "L", "XL", "UK 9 / US 10"];
+const ALL_SIZES = ["S", "M", "L", "XL", "XXL", "30", "32", "34", "36", "38"];
 
 function ShopContent() {
   const { products } = useStore();

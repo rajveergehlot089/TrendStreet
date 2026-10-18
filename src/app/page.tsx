@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Star,
   Quote,
+  Flame,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { ProductCard } from "@/components/ProductCard";
@@ -21,57 +22,57 @@ export default function HomePage() {
 
   const featuredProducts = products.filter((p) => p.featured || p.isBestSeller).slice(0, 8);
 
+  // Exclusively 4 Core Pillars
   const categories = [
     {
-      name: "Bespoke Tailoring",
-      href: "/shop?category=Tailoring+%26+Suits",
-      count: "12 Garments",
-      image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1200&auto=format&fit=crop",
-      tagline: "Vitale Barberis Super 160s",
+      name: "Oversized",
+      href: "/shop?category=Oversized",
+      count: "Heavyweight Silhouettes",
+      image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=1200&auto=format&fit=crop",
+      tagline: "520gsm Loopback & Combed Cotton",
     },
     {
-      name: "Noble Outerwear",
-      href: "/shop?category=Outerwear+%26+Coats",
-      count: "8 Coats",
-      image: "https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=1200&auto=format&fit=crop",
-      tagline: "Double-Faced Cashmere",
+      name: "Jeans",
+      href: "/shop?category=Jeans",
+      count: "Selvedge & Carpenter Denim",
+      image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200&auto=format&fit=crop",
+      tagline: "14oz Okayama Shuttle Looms",
     },
     {
-      name: "Casual Luxury",
-      href: "/shop?category=Shirts+%26+Polos",
-      count: "15 Pieces",
-      image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1200&auto=format&fit=crop",
-      tagline: "Mulberry Silk & Sea Island Cotton",
+      name: "Boxy Fit",
+      href: "/shop?category=Boxy+Fit",
+      count: "Cropped & Dropped Knits",
+      image: "https://images.unsplash.com/photo-1620012253295-c15c429fccf8?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Structured Minimalist Geometry",
     },
     {
-      name: "Artisanal Footwear",
-      href: "/shop?category=Footwear",
-      count: "9 Pairs",
-      image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=1200&auto=format&fit=crop",
-      tagline: "Hand-Welted in Northampton",
+      name: "Jackets",
+      href: "/shop?category=Jackets",
+      count: "Flight Bombers & Moto Cuts",
+      image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Tuscan Suede & Duck Canvas",
     },
   ];
 
   return (
     <div className="space-y-20 sm:space-y-28 pb-20">
-      {/* 1. HERO SECTION WITH 3D WEBGL SHOWROOM */}
+      {/* 1. HERO SECTION WITH FLYING WEAR SHOWCASE */}
       <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Hero Narrative */}
           <div className="lg:col-span-6 space-y-6 text-left">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-burgundy/10 border border-burgundy/20 text-burgundy text-xs font-bold uppercase tracking-widest">
               <Sparkles className="w-3.5 h-3.5 text-crimson" />
-              <span>Autumn / Winter 2026 Collection</span>
+              <span>Autumn / Winter 2026 Drops</span>
             </div>
 
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-espresso leading-[1.1]">
-              Architectural Tailoring. <br />
-              <span className="text-burgundy italic font-normal">Effortless Authority.</span>
+              Oversized Silhouettes. <br />
+              <span className="text-burgundy italic font-normal">Modern Distinction.</span>
             </h1>
 
             <p className="text-sm sm:text-base text-espresso/80 leading-relaxed max-w-lg font-light">
-              Trend Street fuses Savile Row full-canvas precision with relaxed Italian sprezzatura.
-              Cut exclusively from natural noble fibers and engineered for modern masculine distinction.
+              Trend Street redefines contemporary menswear through heavyweight drape, architectural boxy fits, Okayama selvedge denim jeans, and handcrafted flight jackets.
             </p>
 
             {/* CTAs */}
@@ -80,7 +81,7 @@ export default function HomePage() {
                 href="/shop"
                 className="py-4 px-8 bg-burgundy hover:bg-crimson text-ivory text-xs font-bold uppercase tracking-[0.2em] rounded-md transition-all shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 group"
               >
-                <span>Explore The Collection</span>
+                <span>Explore The Drops</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
 
@@ -95,16 +96,16 @@ export default function HomePage() {
             {/* Micro Accreditations */}
             <div className="pt-6 grid grid-cols-3 gap-4 border-t border-burgundy/15 text-xs text-espresso/70">
               <div>
-                <span className="block font-serif text-xl font-bold text-burgundy">100%</span>
-                <span className="text-[11px] leading-tight">European Noble Fibers</span>
+                <span className="block font-serif text-xl font-bold text-burgundy">520gsm</span>
+                <span className="text-[11px] leading-tight">Heavyweight Loopback</span>
               </div>
               <div>
-                <span className="block font-serif text-xl font-bold text-burgundy">Super 160s</span>
-                <span className="text-[11px] leading-tight">Vitale Barberis Wool</span>
+                <span className="block font-serif text-xl font-bold text-burgundy">14oz</span>
+                <span className="text-[11px] leading-tight">Okayama Selvedge Denim</span>
               </div>
               <div>
-                <span className="block font-serif text-xl font-bold text-burgundy">Savile Row</span>
-                <span className="text-[11px] leading-tight">Bespoke Fit Standards</span>
+                <span className="block font-serif text-xl font-bold text-burgundy">Boxy Cut</span>
+                <span className="text-[11px] leading-tight">Dropped-Shoulder Geometry</span>
               </div>
             </div>
           </div>
@@ -119,22 +120,22 @@ export default function HomePage() {
       {/* 2. RUNWAY TICKER MARQUEE */}
       <div className="bg-espresso text-gold py-3 overflow-hidden border-y border-burgundy/30 select-none">
         <div className="flex whitespace-nowrap animate-marquee space-x-12 text-xs font-semibold uppercase tracking-[0.25em]">
-          <span>SAVILE ROW FULL-CANVAS TAILORING</span>
+          <span>HEAVYWEIGHT OVERSIZED HOODIES</span>
           <span className="text-ivory/40">✦</span>
-          <span>VITALE BARBERIS CANONICO WOOLS</span>
+          <span>14OZ OKAYAMA REDLINE SELVEDGE JEANS</span>
           <span className="text-ivory/40">✦</span>
-          <span>HAND-SPLIT DOUBLE-FACED CASHMERE</span>
+          <span>BOXY FIT CROPPED GEOMETRY</span>
+          <span className="text-ivory/40">✦</span>
+          <span>TUSCAN SUEDE & FLIGHT JACKETS</span>
           <span className="text-ivory/40">✦</span>
           <span>COMPLIMENTARY WORLDWIDE VIP COURIER</span>
           <span className="text-ivory/40">✦</span>
-          <span>GOODYEAR-WELTED NORTHAMPTONSHIRE FOOTWEAR</span>
-          <span className="text-ivory/40">✦</span>
-          <span>BESPOKE ALTERATIONS ON ALL GARMENTS</span>
+          <span>520GSM JAPANESE FRENCH LOOPBACK TERRY</span>
           <span className="text-ivory/40">✦</span>
         </div>
       </div>
 
-      {/* 3. CURATED COLLECTIONS GRID */}
+      {/* 3. CURATED SILHOUETTES GRID */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-burgundy/15 gap-4">
           <div>
@@ -142,7 +143,7 @@ export default function HomePage() {
               Curated Wardrobe
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
-              The Sartorial Pillars
+              The Four Silhouettes
             </h2>
           </div>
           <Link
@@ -175,7 +176,7 @@ export default function HomePage() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-gold block">
                   {cat.tagline}
                 </span>
-                <h3 className="font-serif text-xl font-bold text-ivory group-hover:text-gold transition-colors">
+                <h3 className="font-serif text-2xl font-bold text-ivory group-hover:text-gold transition-colors">
                   {cat.name}
                 </h3>
                 <div className="flex items-center justify-between text-xs text-ivory/70 pt-2 border-t border-ivory/15">
@@ -198,14 +199,14 @@ export default function HomePage() {
               Seasonal Highlights
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
-              Trending In Mayfair & Milan
+              Trending In Tokyo & Milan
             </h2>
           </div>
           <Link
             href="/shop"
             className="text-xs font-bold uppercase tracking-widest text-burgundy hover:text-crimson flex items-center gap-1.5 transition-colors"
           >
-            <span>Explore All 24+ Pieces</span>
+            <span>Explore All Drops</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -229,10 +230,10 @@ export default function HomePage() {
             </span>
             <h2 className="font-serif text-3xl sm:text-5xl font-bold leading-tight">
               Autumn / Winter 2026: <br />
-              The Savile & Milan Dialogue
+              The Street & Structure Dialogue
             </h2>
             <p className="text-sm text-ivory/85 leading-relaxed font-light">
-              Explore our curated high-fashion styling guide with interactive "Shop the Look" hotspots. From double-faced cashmere overcoats to hand-patinated Goodyear oxfords.
+              Explore our curated silhouette styling guide with interactive hotspots. From 520gsm loopback oversized hoodies paired with Shibuya carpenter denim to cropped Tuscan suede bombers.
             </p>
             <div className="pt-2">
               <Link
@@ -247,7 +248,7 @@ export default function HomePage() {
 
           {/* Background Ambient Styling Image */}
           <img
-            src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop"
             alt="Editorial Model"
             className="absolute inset-0 w-full h-full object-cover object-right opacity-30 mix-blend-overlay"
           />
@@ -261,7 +262,7 @@ export default function HomePage() {
             Critical Acclaim
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
-            What The Sartorial Press Says
+            What The Fashion Press Says
           </h2>
         </div>
 
@@ -269,10 +270,10 @@ export default function HomePage() {
           <div className="p-8 bg-white rounded-2xl border border-burgundy/15 shadow-sm space-y-4">
             <Quote className="w-8 h-8 text-gold" />
             <p className="text-xs text-espresso/80 italic leading-relaxed">
-              "Trend Street accomplishes what few heritage fashion houses can: marrying uncompromising Savile Row construction with genuine digital-first speed."
+              "Trend Street accomplishes what few contemporary labels can: marrying heavyweight brutalist drape with pristine Japanese denim mill craftsmanship."
             </p>
             <div className="pt-2 border-t border-ivory-dark">
-              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">GQ Sartorial Review</h5>
+              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">Hypebeast Editorial</h5>
               <span className="text-[11px] text-espresso/50">November 2026 Issue</span>
             </div>
           </div>
@@ -280,22 +281,22 @@ export default function HomePage() {
           <div className="p-8 bg-white rounded-2xl border border-burgundy/15 shadow-sm space-y-4">
             <Quote className="w-8 h-8 text-gold" />
             <p className="text-xs text-espresso/80 italic leading-relaxed">
-              "The Mayfair Peak Lapel Tuxedo is a marvel of full-canvas tailoring. It molds effortlessly to the wearer, radiating understated authority."
+              "The Shibuya Carpenter Denim is the definitive silhouette of the season. Generous stacking without dragging, tailored with vintage redline selvedge."
             </p>
             <div className="pt-2 border-t border-ivory-dark">
-              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">Vogue Man International</h5>
-              <span className="text-[11px] text-espresso/50">Sartorial Awards</span>
+              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">Highsnobiety Selects</h5>
+              <span className="text-[11px] text-espresso/50">Denim Awards</span>
             </div>
           </div>
 
           <div className="p-8 bg-white rounded-2xl border border-burgundy/15 shadow-sm space-y-4">
             <Quote className="w-8 h-8 text-gold" />
             <p className="text-xs text-espresso/80 italic leading-relaxed">
-              "Double-faced cashmere that feels like a whisper yet insulates like armor. Trend Street is redefining modern bespoke menswear."
+              "The 520gsm oversized hoodie has the most structural hood we have tested in years. It hangs impeccably away from the torso."
             </p>
             <div className="pt-2 border-t border-ivory-dark">
-              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">Financial Times How To Spend It</h5>
-              <span className="text-[11px] text-espresso/50">Winter Luxe Guide</span>
+              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">GQ Style Guide</h5>
+              <span className="text-[11px] text-espresso/50">Winter Essentials</span>
             </div>
           </div>
         </div>
