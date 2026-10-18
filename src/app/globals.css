@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Trend Street Brand Design System Tokens */
+  --color-burgundy: #4A1216;
+  --color-crimson: #6B1D24;
+  --color-espresso: #2B080A;
+  --color-ivory: #F9F6F4;
+  --color-gold: #C5A880;
+}
+
+body {
+  background-color: var(--color-ivory);
+  color: var(--color-espresso);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom Text Selection in Deep Burgundy */
+::selection {
+  background-color: #4A1216;
+  color: #F9F6F4;
+}
+
+/* Luxury Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0EAE5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4A1216;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B1D24;
+}

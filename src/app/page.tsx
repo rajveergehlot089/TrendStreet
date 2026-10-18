@@ -1,0 +1,385 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Sparkles,
+  Scissors,
+  Award,
+  ChevronRight,
+  ShieldCheck,
+  Star,
+  Quote,
+} from "lucide-react";
+import { useStore } from "@/context/StoreContext";
+import { ProductCard } from "@/components/ProductCard";
+import { HeroShowroom3D } from "@/components/3d/HeroShowroom3D";
+
+export default function HomePage() {
+  const { products } = useStore();
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+
+  const featuredProducts = products.filter((p) => p.featured || p.isBestSeller).slice(0, 8);
+
+  const categories = [
+    {
+      name: "Bespoke Tailoring",
+      href: "/shop?category=Tailoring+%26+Suits",
+      count: "12 Garments",
+      image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Vitale Barberis Super 160s",
+    },
+    {
+      name: "Noble Outerwear",
+      href: "/shop?category=Outerwear+%26+Coats",
+      count: "8 Coats",
+      image: "https://images.unsplash.com/photo-1544923246-77307dd654cb?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Double-Faced Cashmere",
+    },
+    {
+      name: "Casual Luxury",
+      href: "/shop?category=Shirts+%26+Polos",
+      count: "15 Pieces",
+      image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Mulberry Silk & Sea Island Cotton",
+    },
+    {
+      name: "Artisanal Footwear",
+      href: "/shop?category=Footwear",
+      count: "9 Pairs",
+      image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Hand-Welted in Northampton",
+    },
+  ];
+
+  return (
+    <div className="space-y-20 sm:space-y-28 pb-20">
+      {/* 1. HERO SECTION WITH 3D WEBGL SHOWROOM */}
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Hero Narrative */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-burgundy/10 border border-burgundy/20 text-burgundy text-xs font-bold uppercase tracking-widest">
+              <Sparkles className="w-3.5 h-3.5 text-crimson" />
+              <span>Autumn / Winter 2026 Collection</span>
+            </div>
+
+            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-espresso leading-[1.1]">
+              Architectural Tailoring. <br />
+              <span className="text-burgundy italic font-normal">Effortless Authority.</span>
+            </h1>
+
+            <p className="text-sm sm:text-base text-espresso/80 leading-relaxed max-w-lg font-light">
+              Trend Street fuses Savile Row full-canvas precision with relaxed Italian sprezzatura.
+              Cut exclusively from natural noble fibers and engineered for modern masculine distinction.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              <Link
+                href="/shop"
+                className="py-4 px-8 bg-burgundy hover:bg-crimson text-ivory text-xs font-bold uppercase tracking-[0.2em] rounded-md transition-all shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 group"
+              >
+                <span>Explore The Collection</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <Link
+                href="/lookbook"
+                className="py-4 px-8 border border-burgundy/30 hover:border-burgundy text-burgundy hover:bg-burgundy/5 text-xs font-bold uppercase tracking-[0.2em] rounded-md transition-colors text-center"
+              >
+                View Lookbook
+              </Link>
+            </div>
+
+            {/* Micro Accreditations */}
+            <div className="pt-6 grid grid-cols-3 gap-4 border-t border-burgundy/15 text-xs text-espresso/70">
+              <div>
+                <span className="block font-serif text-xl font-bold text-burgundy">100%</span>
+                <span className="text-[11px] leading-tight">European Noble Fibers</span>
+              </div>
+              <div>
+                <span className="block font-serif text-xl font-bold text-burgundy">Super 160s</span>
+                <span className="text-[11px] leading-tight">Vitale Barberis Wool</span>
+              </div>
+              <div>
+                <span className="block font-serif text-xl font-bold text-burgundy">Savile Row</span>
+                <span className="text-[11px] leading-tight">Bespoke Fit Standards</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Hero: Interactive 3D WebGL Showroom */}
+          <div className="lg:col-span-6 w-full">
+            <HeroShowroom3D />
+          </div>
+        </div>
+      </section>
+
+      {/* 2. RUNWAY TICKER MARQUEE */}
+      <div className="bg-espresso text-gold py-3 overflow-hidden border-y border-burgundy/30 select-none">
+        <div className="flex whitespace-nowrap animate-marquee space-x-12 text-xs font-semibold uppercase tracking-[0.25em]">
+          <span>SAVILE ROW FULL-CANVAS TAILORING</span>
+          <span className="text-ivory/40">✦</span>
+          <span>VITALE BARBERIS CANONICO WOOLS</span>
+          <span className="text-ivory/40">✦</span>
+          <span>HAND-SPLIT DOUBLE-FACED CASHMERE</span>
+          <span className="text-ivory/40">✦</span>
+          <span>COMPLIMENTARY WORLDWIDE VIP COURIER</span>
+          <span className="text-ivory/40">✦</span>
+          <span>GOODYEAR-WELTED NORTHAMPTONSHIRE FOOTWEAR</span>
+          <span className="text-ivory/40">✦</span>
+          <span>BESPOKE ALTERATIONS ON ALL GARMENTS</span>
+          <span className="text-ivory/40">✦</span>
+        </div>
+      </div>
+
+      {/* 3. CURATED COLLECTIONS GRID */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-burgundy/15 gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
+              Curated Wardrobe
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
+              The Sartorial Pillars
+            </h2>
+          </div>
+          <Link
+            href="/shop"
+            className="text-xs font-bold uppercase tracking-widest text-burgundy hover:text-crimson flex items-center gap-1.5 transition-colors"
+          >
+            <span>View All Categories</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.name}
+              href={cat.href}
+              className="group relative h-96 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 flex flex-col justify-end p-6 border border-burgundy/10"
+            >
+              {/* Background Image */}
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+              />
+              {/* Dark Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/40 to-transparent opacity-85 group-hover:opacity-90 transition-opacity" />
+
+              {/* Card Content */}
+              <div className="relative z-10 space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gold block">
+                  {cat.tagline}
+                </span>
+                <h3 className="font-serif text-xl font-bold text-ivory group-hover:text-gold transition-colors">
+                  {cat.name}
+                </h3>
+                <div className="flex items-center justify-between text-xs text-ivory/70 pt-2 border-t border-ivory/15">
+                  <span>{cat.count}</span>
+                  <span className="flex items-center gap-1 text-gold font-semibold uppercase text-[10px] tracking-wider group-hover:translate-x-1 transition-transform">
+                    Discover <ChevronRight className="w-3 h-3" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. TRENDING NOW SPOTLIGHT */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-burgundy/15 gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
+              Seasonal Highlights
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
+              Trending In Mayfair & Milan
+            </h2>
+          </div>
+          <Link
+            href="/shop"
+            className="text-xs font-bold uppercase tracking-widest text-burgundy hover:text-crimson flex items-center gap-1.5 transition-colors"
+          >
+            <span>Explore All 24+ Pieces</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featuredProducts.map((prod) => (
+            <ProductCard key={prod.id} product={prod} />
+          ))}
+        </div>
+      </section>
+
+      {/* 5. CRAFTSMANSHIP & ATELIER FOCUS */}
+      <section className="bg-espresso text-ivory py-20 border-y border-burgundy/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-gold block">
+                The Sartorial Philosophy
+              </span>
+
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-ivory">
+                Born in London. <br />
+                Woven in Italy. <br />
+                Engineered for Decades.
+              </h2>
+
+              <p className="text-sm text-ivory/80 leading-relaxed font-light">
+                At Trend Street, we reject disposable seasonal trends. Every tailored garment is built around a floating natural horsehair canvas that molds to your silhouette with body heat, draping more harmoniously with every wear.
+              </p>
+
+              <div className="space-y-4 pt-2">
+                <div className="flex items-start space-x-3.5">
+                  <div className="p-2 bg-burgundy rounded-full text-gold mt-0.5">
+                    <Scissors className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-ivory uppercase tracking-wider">
+                      Floating Full-Canvas Interlining
+                    </h4>
+                    <p className="text-xs text-ivory/70 mt-0.5">
+                      No glued fusible backing. The chest piece breathes naturally, preventing puckering and heat accumulation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3.5">
+                  <div className="p-2 bg-burgundy rounded-full text-gold mt-0.5">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-ivory uppercase tracking-wider">
+                      Hand-Finished Milanese Buttonholes
+                    </h4>
+                    <p className="text-xs text-ivory/70 mt-0.5">
+                      Braided with pure silk gimp thread by master artisans, taking over 45 minutes per individual lapel eyelet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gold hover:text-ivory transition-colors"
+                >
+                  <span>Discover Our Atelier Story</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 relative">
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-burgundy/40">
+                <img
+                  src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop"
+                  alt="Trend Street Master Tailor Crafting"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-espresso via-transparent to-transparent opacity-60" />
+                <div className="absolute bottom-6 left-6 right-6 p-4 bg-espresso/80 backdrop-blur-md rounded-xl border border-gold/20 text-xs">
+                  <span className="font-bold text-gold uppercase tracking-wider block mb-1">
+                    Vitale Barberis Canonico Certified
+                  </span>
+                  <p className="text-ivory/80 text-[11px]">
+                    Sourced from family weavers active in Northern Italy since 1663.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. EDITORIAL LOOKBOOK TEASER */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative rounded-3xl overflow-hidden bg-burgundy text-ivory p-8 sm:p-14 lg:p-20 shadow-2xl">
+          <div className="relative z-10 max-w-xl space-y-5">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-gold">
+              Editorial Dossier
+            </span>
+            <h2 className="font-serif text-3xl sm:text-5xl font-bold leading-tight">
+              Autumn / Winter 2026: <br />
+              The Savile & Milan Dialogue
+            </h2>
+            <p className="text-sm text-ivory/85 leading-relaxed font-light">
+              Explore our curated high-fashion styling guide with interactive "Shop the Look" hotspots. From double-faced cashmere overcoats to hand-patinated Goodyear oxfords.
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/lookbook"
+                className="inline-flex items-center gap-2 py-3.5 px-8 bg-gold hover:bg-gold-light text-espresso font-bold text-xs uppercase tracking-[0.2em] rounded-md transition-all shadow-lg"
+              >
+                <span>Enter The Lookbook</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Background Ambient Styling Image */}
+          <img
+            src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop"
+            alt="Editorial Model"
+            className="absolute inset-0 w-full h-full object-cover object-right opacity-30 mix-blend-overlay"
+          />
+        </div>
+      </section>
+
+      {/* 7. PRESS & VIP CLIENT TESTIMONIALS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
+            Critical Acclaim
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
+            What The Sartorial Press Says
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-8 bg-white rounded-2xl border border-burgundy/15 shadow-sm space-y-4">
+            <Quote className="w-8 h-8 text-gold" />
+            <p className="text-xs text-espresso/80 italic leading-relaxed">
+              "Trend Street accomplishes what few heritage fashion houses can: marrying uncompromising Savile Row construction with genuine digital-first speed."
+            </p>
+            <div className="pt-2 border-t border-ivory-dark">
+              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">GQ Sartorial Review</h5>
+              <span className="text-[11px] text-espresso/50">November 2026 Issue</span>
+            </div>
+          </div>
+
+          <div className="p-8 bg-white rounded-2xl border border-burgundy/15 shadow-sm space-y-4">
+            <Quote className="w-8 h-8 text-gold" />
+            <p className="text-xs text-espresso/80 italic leading-relaxed">
+              "The Mayfair Peak Lapel Tuxedo is a marvel of full-canvas tailoring. It molds effortlessly to the wearer, radiating understated authority."
+            </p>
+            <div className="pt-2 border-t border-ivory-dark">
+              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">Vogue Man International</h5>
+              <span className="text-[11px] text-espresso/50">Sartorial Awards</span>
+            </div>
+          </div>
+
+          <div className="p-8 bg-white rounded-2xl border border-burgundy/15 shadow-sm space-y-4">
+            <Quote className="w-8 h-8 text-gold" />
+            <p className="text-xs text-espresso/80 italic leading-relaxed">
+              "Double-faced cashmere that feels like a whisper yet insulates like armor. Trend Street is redefining modern bespoke menswear."
+            </p>
+            <div className="pt-2 border-t border-ivory-dark">
+              <h5 className="font-bold text-xs uppercase tracking-wider text-burgundy">Financial Times How To Spend It</h5>
+              <span className="text-[11px] text-espresso/50">Winter Luxe Guide</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

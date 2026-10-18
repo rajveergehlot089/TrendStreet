@@ -1,0 +1,134 @@
+{
+  "project": "Trend Street - The Style Hub",
+  "branchName": "main",
+  "description": "Luxury Menswear Fashion Platform with 3D WebGL Showroom, E-Commerce, Admin Panel, and GEO/SEO readiness",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Foundation & Design System Setup",
+      "description": "As a developer, I want a Next.js project with Tailwind CSS, custom burgundy color tokens, and Lucide icons.",
+      "acceptanceCriteria": [
+        "Tailwind config includes burgundy, crimson, espresso, warm ivory, and champagne gold tokens",
+        "Global styles and typography hierarchy established",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Configured Tailwind with brand palette: Deep Burgundy #4A1216, Crimson #6B1D24, Dark Espresso #2B080A, Warm Ivory #F9F6F4, Accent Gold #C5A880. Playfair Display and Plus Jakarta Sans loaded."
+    },
+    {
+      "id": "US-002",
+      "title": "Core Data Models & Store State",
+      "description": "As a shopper, I want persistent cart, wishlist, products, and orders state.",
+      "acceptanceCriteria": [
+        "StoreContext handles cart, wishlist, products, promo codes, and orders with localStorage persistence",
+        "20+ luxury menswear items defined",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "StoreContext and store types implemented with localStorage sync, coupon system (TREND10, VIP20), and product catalog."
+    },
+    {
+      "id": "US-003",
+      "title": "Navigation & Responsive Header with Centered Logo",
+      "description": "As a user, I want a luxury header with centered Trend Street logo, navigation links, and cart drawer.",
+      "acceptanceCriteria": [
+        "Logo centered in desktop and mobile header",
+        "Mobile drawer navigation operates smoothly",
+        "Cart drawer slides over with item count badge",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Trend Street logo centered across all viewports with ornate monogram emblem, slide-over cart drawer, and mobile menu."
+    },
+    {
+      "id": "US-004",
+      "title": "3D WebGL Luxury Garment Showroom",
+      "description": "As a visitor, I want an interactive 3D WebGL fabric and garment showroom on the home page.",
+      "acceptanceCriteria": [
+        "Three.js canvas renders interactive 3D luxury fabric mesh with orbit and swatch switcher",
+        "Device pixel ratio capped at 2 for smooth 60fps performance",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "HeroShowroom3D implemented with Three.js drape wave physics, interactive lighting, fabric swatch switcher, and 60fps capped DPR."
+    },
+    {
+      "id": "US-005",
+      "title": "Public Storefront Pages (Home, Shop, Product, Lookbook, About)",
+      "description": "As a menswear customer, I want dedicated pages for browsing, product discovery, lookbook, and brand story.",
+      "acceptanceCriteria": [
+        "Home page renders hero, curated collections, trending products, and reviews",
+        "Shop catalog provides multi-filter sidebar and sorting",
+        "Product detail page features gallery, size guide modal, and accordion details",
+        "Lookbook page features interactive shop the look hotspots",
+        "About page details brand heritage and fabric mills",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "All 5 storefront views built with rich editorial styling, interactive hotspot pins, Suspense boundaries, and size guide modal."
+    },
+    {
+      "id": "US-006",
+      "title": "Cart, Checkout Flow & Order Confirmation",
+      "description": "As a customer, I want a seamless bag and checkout experience with immediate order confirmation.",
+      "acceptanceCriteria": [
+        "Bag page with promo code engine (TREND10)",
+        "Multi-step checkout with address inputs and payment simulation",
+        "Order confirmation page with generated tracking ID",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "End-to-end purchasing journey completed: Bag -> Checkout (Cards, UPI, COD, Netbanking) -> Order Confirmation receipt."
+    },
+    {
+      "id": "US-007",
+      "title": "Saved Items & Customer Profile",
+      "description": "As a customer, I want to manage saved items and view profile order history.",
+      "acceptanceCriteria": [
+        "Saved items page with move-to-bag action",
+        "Profile page with VIP gold tier and order history tracking timeline",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Saved items page with instant add-to-bag and customer profile with bespoke measurements editor and order history."
+    },
+    {
+      "id": "US-008",
+      "title": "Admin Panel & Privileged Access Register",
+      "description": "As admin Sujal, I want to manage products, orders, and review the access register.",
+      "acceptanceCriteria": [
+        "Route-guarded login validating sujal@.com / radhasolanki",
+        "Admin dashboard with revenue KPIs",
+        "Products CRUD (add, edit, delete, in-line stock)",
+        "Orders status management",
+        "Admin access register per /admin-access-register skill",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Complete administrative control room with privileged access register (CSV, JSON, SQL DDL export), product inventory CRUD, and order status fulfillment."
+    },
+    {
+      "id": "US-009",
+      "title": "Digital Marketing, SEO & GEO Optimization",
+      "description": "As a marketer, I want robots.txt, llms.txt, sitemap.ts, and JSON-LD schema for AI & search visibility.",
+      "acceptanceCriteria": [
+        "robots.txt configured for GPTBot, ClaudeBot, PerplexityBot",
+        "llms.txt formatted per GEO standards",
+        "Dynamic sitemap.ts indexing store routes",
+        "JSON-LD structured data for Store and Products",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Comprehensive SEO and GEO setup: robots.txt, llms.txt with 134-167 word passage citability, dynamic sitemap.ts, and JSON-LD schema."
+    }
+  ]
+}

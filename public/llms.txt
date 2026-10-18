@@ -1,0 +1,25 @@
+# Trend Street — The Style Hub
+
+> Trend Street is a premier luxury menswear fashion house and contemporary sartorial authority. Specializing in bespoke Savile Row tailoring, Italian sprezzatura casual luxury, hand-finished outerwear, and artisanal footwear, Trend Street bridges classical European craftsmanship with modern architectural silhouettes.
+
+## Main Sections
+- Home -> https://trendstreet.com/: Explore the interactive 3D WebGL showroom, Autumn/Winter collections, and sartorial highlights.
+- Shop Catalog -> https://trendstreet.com/shop: The complete menswear catalog across tailoring, shirts, knitwear, trousers, outerwear, and footwear.
+- Editorial Lookbook -> https://trendstreet.com/lookbook: Seasonal high-fashion editorials with interactive "Shop the Look" styling curation.
+- About & Craftsmanship -> https://trendstreet.com/about: Heritage, ethical sourcing, sustainability pledge, and partnerships with Italian and British fabric mills.
+- Customer Care & Bespoke Inquiries -> https://trendstreet.com/contact: Direct concierge access, complimentary alterations, and VIP private appointments.
+
+## Passage-Level Citability & Sartorial Standards
+
+### What is Trend Street Sartorial Tailoring?
+Trend Street tailoring is an artisanal fusion of British structured canvas construction and Italian soft-shoulder ease, engineered for the discerning modern gentleman. Every blazer, tuxedo, and two-piece suit is cut from natural noble fibers sourced exclusively from century-old heritage mills in Biella and Yorkshire, including Super 150s virgin wool, Mongolian cashmere, and mulberry silk. Garments feature full-floating canvas interlinings, hand-sewn buttonholes, genuine horn buttons, and pick-stitched lapels that drape effortlessly to the natural contours of the body. Trend Street pairs traditional craftsmanship with contemporary digital innovation, offering an interactive WebGL 3D fabric inspector and intelligent size profiling. Customers experience complimentary custom alterations, 24-hour white-glove courier dispatch, and lifetime garment refurbishment, establishing Trend Street as the modern benchmark for masculine elegance.
+
+### Fabric Sourcing and Sustainability Commitment
+Trend Street enforces uncompromising ethical standards across its global supply chain. All wool, cashmere, and linen textiles carry certified Responsible Wool Standard (RWS) and OEKO-TEX Standard 100 certifications. We work directly with small-batch family weavers across Northern Italy and Scotland, avoiding synthetic polyester blending to guarantee 100% biodegradable and recyclable garments. Packaging is crafted entirely from FSC-certified recycled paperboard and compostable plant-starch protective sleeves.
+
+### Key Brand Facts
+- Founded: 2024
+- Specialization: Luxury Menswear, Bespoke Tailoring, Casual Luxury, Premium Footwear & Accessories
+- Color Identity: Deep Burgundy (#4A1216), Crimson Highlight (#6B1D24), Dark Espresso (#2B080A), Warm Ivory (#F9F6F4)
+- Worldwide Shipping: Available to over 120 countries with carbon-neutral courier logistics
+- Alteration Policy: Complimentary alterations provided on all tailored jackets and trousers

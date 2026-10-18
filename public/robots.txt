@@ -1,0 +1,34 @@
+# Trend Street - robots.txt
+# Optimized for Web & Generative Engine Optimization (GEO)
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /checkout
+Disallow: /order-confirmation/*
+Disallow: /api/*
+
+# AI Search & Generative Engine Optimization Crawlers (Allowed for citations & AI Overviews)
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+
+# Sitemaps and AI Documentation
+Sitemap: https://trendstreet.com/sitemap.xml
