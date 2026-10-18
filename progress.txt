@@ -1,11 +1,11 @@
 ## Codebase Patterns
 - Palette: Primary Deep Burgundy (`#4A1216`), Crimson Highlight (`#6B1D24`), Dark Espresso Shadow (`#2B080A`), Warm Ivory (`#F9F6F4`), Champagne Gold (`#C5A880`).
 - Header: Centered logo on all devices with responsive action buttons and sliding mobile drawer.
-- 3D Engine: Three.js with capped DPR (max 2) for smooth 60fps WebGL execution.
-- Next.js App Router: `useSearchParams` must be wrapped in React `<Suspense>` boundary to allow static site generation.
+- 3D Engine: Three.js with capped DPR (max 2), dynamic next/dynamic code splitting, and explicit geometry/material disposal on unmount.
+- Next.js App Router: `useSearchParams` wrapped in React `<Suspense>` boundary; dynamic route fallbacks securely reject missing IDs to prevent PII disclosure.
 - Persistence: StoreContext and AdminAuthContext use localStorage with SSR-safe hydration guards (`isHydrated`).
-- Security: Admin routes guarded in layout; credentials validated against `sujal@.com` / `radhasolanki`.
-- Privileged Access Register: Conforms to `/admin-access-register` with CSV, JSON, and SQL DDL exports.
+- Security: Admin routes guarded; credentials validated against `sujal@.com` / `radhasolanki`; SQL DDL generator escapes user inputs.
+- Privileged Access Register: Conforms to `/admin-access-register` with CSV, JSON, and sanitized SQL DDL exports.
 - GEO & AI Crawlers: `llms.txt` and `robots.txt` optimized for GPTBot, ClaudeBot, PerplexityBot with 134-167 word passage-level citability.
 
 ## Stories Progress
@@ -18,3 +18,8 @@
 - [x] US-007: Saved Items & Customer Profile — COMPLETED (Wishlist quick actions, profile bespoke measurements & tracking)
 - [x] US-008: Admin Panel & Privileged Access Register — COMPLETED (Sujal credentials, products CRUD, orders, access register exports)
 - [x] US-009: Digital Marketing, SEO & GEO Optimization — COMPLETED (sitemap.ts, robots.txt, llms.txt, JSON-LD schema)
+
+## Code Quality Gates
+- [x] CodeRabbit Audit: All findings remediated (PII route fallbacks fixed, OrderStatus type union expanded, Three.js GPU memory leaks eliminated, next/dynamic bundle splitting added reducing home JS bundle from 240kB to 110kB, SQL generation sanitized, Form WCAG 2.1 SC 1.3.1 labels associated).
+- [x] TypeScript Typecheck: 0 errors (`tsc --noEmit`).
+- [x] Next.js Production Build: 17/17 routes compiled successfully.
