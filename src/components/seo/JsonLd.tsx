@@ -7,9 +7,15 @@ export const StoreJsonLd: React.FC = () => {
     name: "Trend Street",
     alternateName: "The Style Hub",
     description:
-      "Premier luxury menswear fashion house specializing in Savile Row tailoring, Italian noble fabrics, handcrafted footwear, and bespoke seasonal lookbooks.",
+      "Premier luxury menswear fashion house specializing in four architectural silhouettes: Oversized hoodies & tees, Okayama selvedge carpenter jeans, boxy fit knits & poplin overshirts, and handcrafted structural jackets.",
     url: "https://trendstreet.com",
-    logo: "https://trendstreet.com/logo.png",
+    logo: "https://trendstreet.com/trend-street-logo-burgundy.png",
+    department: [
+      { "@type": "Department", "name": "Oversized Silhouette", "url": "https://trendstreet.com/oversized" },
+      { "@type": "Department", "name": "Okayama Selvedge Jeans", "url": "https://trendstreet.com/jeans" },
+      { "@type": "Department", "name": "Boxy Fit Architecture", "url": "https://trendstreet.com/boxy-fit" },
+      { "@type": "Department", "name": "Structural Jackets", "url": "https://trendstreet.com/jackets" },
+    ],
     priceRange: "$$$$",
     currenciesAccepted: "USD, GBP, EUR",
     paymentAccepted: "Credit Card, Debit Card, Apple Pay, Google Pay, UPI",

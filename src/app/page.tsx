@@ -14,7 +14,8 @@ import {
 import { useStore } from "@/context/StoreContext";
 import { ProductCard } from "@/components/ProductCard";
 import { FlyingWearHero } from "@/components/FlyingWearHero";
-import { FlyingWearScrollStrip } from "@/components/FlyingWearScrollStrip";
+import { SilhouetteStudio } from "@/components/SilhouetteStudio";
+import { GeoFaqSection } from "@/components/GeoFaqSection";
 
 export default function HomePage() {
   const { products } = useStore();
@@ -218,8 +219,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. FLYING WEAR SCROLLING SHOWCASE */}
-      <FlyingWearScrollStrip />
+      {/* 5. INTERACTIVE SILHOUETTE STUDIO (MID-SITE LAB) */}
+      <SilhouetteStudio />
 
       {/* 6. EDITORIAL LOOKBOOK TEASER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -301,6 +302,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 8. GEO & SARTORIAL CITABILITY FAQ */}
+      <GeoFaqSection />
     </div>
   );
 }

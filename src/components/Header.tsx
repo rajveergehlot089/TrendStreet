@@ -41,23 +41,20 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Exclusively 4 core sections
-  const leftNavLinks = [
-    { label: "Oversized", href: "/shop?category=Oversized" },
-    { label: "Jeans", href: "/shop?category=Jeans" },
-  ];
-
-  const rightNavLinks = [
-    { label: "Boxy Fit", href: "/shop?category=Boxy+Fit" },
-    { label: "Jackets", href: "/shop?category=Jackets" },
+  // All 4 categories placed side-by-side on the left side
+  const navCategories = [
+    { label: "Oversized", href: "/oversized" },
+    { label: "Jeans", href: "/jeans" },
+    { label: "Boxy Fit", href: "/boxy-fit" },
+    { label: "Jackets", href: "/jackets" },
   ];
 
   const allNavLinks = [
     { label: "All Drops", href: "/shop" },
-    { label: "Oversized", href: "/shop?category=Oversized" },
-    { label: "Jeans", href: "/shop?category=Jeans" },
-    { label: "Boxy Fit", href: "/shop?category=Boxy+Fit" },
-    { label: "Jackets", href: "/shop?category=Jackets" },
+    { label: "Oversized", href: "/oversized" },
+    { label: "Jeans", href: "/jeans" },
+    { label: "Boxy Fit", href: "/boxy-fit" },
+    { label: "Jackets", href: "/jackets" },
     { label: "Lookbook", href: "/lookbook" },
     { label: "Heritage", href: "/about" },
   ];
@@ -74,8 +71,8 @@ export const Header: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between min-h-[58px]">
-            {/* Left Nav (Desktop) / Mobile Toggle */}
-            <div className="flex-1 flex items-center justify-start space-x-6">
+            {/* Left Nav (All 4 Sections Grouped Side by Side) / Mobile Toggle */}
+            <div className="flex-1 flex items-center justify-start space-x-3 sm:space-x-6">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="lg:hidden p-2 text-burgundy hover:text-crimson transition-colors -ml-2"
@@ -86,14 +83,14 @@ export const Header: React.FC = () => {
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
 
-              <nav className="hidden lg:flex items-center space-x-8">
-                {leftNavLinks.map((link) => {
+              <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7">
+                {navCategories.map((link) => {
                   const isActive = pathname === link.href;
                   return (
                     <Link
                       key={link.label}
                       href={link.href}
-                      className={`text-xs font-bold uppercase tracking-[0.2em] transition-colors relative py-1 ${
+                      className={`text-xs font-bold uppercase tracking-[0.16em] transition-colors relative py-1 ${
                         isActive
                           ? "text-crimson font-black after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-crimson"
                           : "text-espresso/90 hover:text-crimson"
@@ -115,27 +112,8 @@ export const Header: React.FC = () => {
               />
             </div>
 
-            {/* Right Nav (Desktop) & Action Icons */}
-            <div className="flex-1 flex items-center justify-end space-x-3 sm:space-x-6">
-              <nav className="hidden lg:flex items-center space-x-8 mr-2">
-                {rightNavLinks.map((link) => {
-                  const isActive = pathname === link.href;
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className={`text-xs font-bold uppercase tracking-[0.2em] transition-colors relative py-1 ${
-                        isActive
-                          ? "text-crimson font-black after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-crimson"
-                          : "text-espresso/90 hover:text-crimson"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-
+            {/* Right Action Icons */}
+            <div className="flex-1 flex items-center justify-end space-x-2 sm:space-x-5">
               {/* Search Toggle */}
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}

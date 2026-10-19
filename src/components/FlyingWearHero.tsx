@@ -87,15 +87,15 @@ export const FlyingWearHero: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-b from-[#FAF7F5] via-[#F4EFEA] to-[#FAF7F5] border border-burgundy/15 shadow-2xl p-6 sm:p-10 flex flex-col justify-between min-h-[540px] sm:min-h-[600px] select-none"
+      className="relative w-full rounded-3xl overflow-hidden bg-gradient-to-b from-[#FAF7F5] via-[#F4EFEA]/80 to-[#FAF7F5] p-6 sm:p-10 flex flex-col justify-between min-h-[540px] sm:min-h-[600px] select-none"
     >
       {/* Ambient Radial Luxury Glow */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(107,29,36,0.08),transparent_70%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(107,29,36,0.06),transparent_70%)]" />
       <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-burgundy/10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-burgundy/5 blur-3xl pointer-events-none" />
 
       {/* Top Header Controls: Badge & Wear Selector */}
-      <div className="relative z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-burgundy/10">
+      <div className="relative z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-crimson animate-pulse" />
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-burgundy">
@@ -104,7 +104,7 @@ export const FlyingWearHero: React.FC = () => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center space-x-1 sm:space-x-2 bg-ivory/80 backdrop-blur-md p-1 rounded-full border border-burgundy/15 shadow-sm">
+        <div className="flex items-center space-x-1 sm:space-x-2 bg-ivory/90 backdrop-blur-md p-1 rounded-full shadow-sm">
           {FLYING_WEAR_ITEMS.map((item, idx) => (
             <button
               key={item.id}
@@ -176,7 +176,7 @@ export const FlyingWearHero: React.FC = () => {
       </div>
 
       {/* Bottom Floating Details & Action Bar */}
-      <div className="relative z-20 pt-4 border-t border-burgundy/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="relative z-20 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <h3 className="font-serif text-lg sm:text-xl font-bold text-espresso">
