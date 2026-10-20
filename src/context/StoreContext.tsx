@@ -119,6 +119,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   },
   promoCodes: [
     { code: "TREND10", discountPercent: 10, description: "Inaugural Offer: 10% off on orders above ₹1,999." },
+    { code: "BUNDLE15", discountPercent: 15, description: "VIP Outfit Bundle: 15% off complete streetwear looks." },
     { code: "STREET20", discountPercent: 20, description: "Seasonal Drop: 20% off on orders above ₹3,999." },
     { code: "FREESHIP", discountPercent: 0, description: "Complimentary priority courier delivery across India." },
   ],

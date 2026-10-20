@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Heart, ShoppingBag, Eye, Star, Check } from "lucide-react";
+import { Heart, Eye, Star } from "lucide-react";
 import { Product } from "@/types/store";
 import { useStore } from "@/context/StoreContext";
 import { formatPrice } from "@/lib/pricing";
@@ -14,19 +14,32 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart, toggleWishlist, isInWishlist, setQuickViewProduct } = useStore();
-  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || "M");
-  const [selectedColor, setSelectedColor] = useState<string>(product.colors[0]?.name || "Default");
+  const [selectedColor] = useState<string>(product.colors[0]?.name || "Default");
   const [isHovered, setIsHovered] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
+  const [addedSize, setAddedSize] = useState<string | null>(null);
 
   const isFavorited = isInWishlist(product.id);
 
-  const handleQuickAdd = (e: React.MouseEvent) => {
+  // Derive genuine heavyweight mill badge
+  const getFabricBadge = (prod: Product): string => {
+    const text = `${prod.fabric} ${prod.subtitle} ${prod.name}`.toLowerCase();
+    if (text.includes("320gsm") || text.includes("320 gsm")) return "320 GSM";
+    if (text.includes("520gsm") || text.includes("520 gsm")) return "520 GSM TERRY";
+    if (text.includes("15oz") || text.includes("14.5oz") || text.includes("selvedge")) return "15 OZ SELVEDGE";
+    if (text.includes("700gsm") || text.includes("700 gsm") || text.includes("melton")) return "700 GSM WOOL";
+    if (text.includes("suede")) return "TUSCAN SUEDE";
+    if (text.includes("canvas")) return "DUCK CANVAS";
+    return "HEAVYWEIGHT";
+  };
+
+  const fabricBadge = getFabricBadge(product);
+
+  const handleSizeAdd = (e: React.MouseEvent, size: string) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, selectedSize, selectedColor, 1);
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000);
+    addToCart(product, size, selectedColor, 1);
+    setAddedSize(size);
+    setTimeout(() => setAddedSize(null), 1800);
   };
 
   const handleHeartClick = (e: React.MouseEvent) => {
@@ -50,78 +63,101 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Product Image Frame */}
-      <Link href={`/product/${product.id}`} className="relative aspect-[3/4] w-full overflow-hidden bg-ivory-dark block">
-        {/* Badges: New / Best Seller / Sale */}
+      {/* Product Image Frame (DIV container, NOT <a>) */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-ivory-dark block">
+        {/* Badges: New / Best Seller / Fabric GSM Spec */}
         <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1 pointer-events-none">
+          {/* Heavyweight Fabric Pill (Offcult / Off Duty signature) */}
+          <span className="bg-espresso/90 backdrop-blur-sm text-gold border border-gold/30 text-[8px] sm:text-[9px] uppercase tracking-widest font-mono font-bold px-1.5 sm:px-2 py-0.5 rounded shadow-sm">
+            [ {fabricBadge} ]
+          </span>
+
           {product.isNew && (
-            <span className="bg-espresso text-ivory text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded shadow-xs">
-              New
+            <span className="bg-espresso text-ivory text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-1.5 sm:px-2 py-0.5 rounded shadow-sm">
+              New Drop
             </span>
           )}
           {product.isBestSeller && (
-            <span className="bg-burgundy text-gold text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded shadow-xs">
-              Top
+            <span className="bg-burgundy text-gold text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-1.5 sm:px-2 py-0.5 rounded shadow-sm">
+              Top Rated
             </span>
           )}
           {product.originalPrice && (
-            <span className="bg-crimson text-ivory text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded shadow-xs">
+            <span className="bg-crimson text-ivory text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-1.5 sm:px-2 py-0.5 rounded shadow-sm">
               Save {formatPrice(product.originalPrice - product.price)}
             </span>
           )}
         </div>
 
-        {/* Wishlist Button (Touch friendly >= 44px hit area) */}
+        {/* Wishlist Button (Standalone button, valid HTML5 sibling) */}
         <button
+          type="button"
           onClick={handleHeartClick}
           aria-label={isFavorited ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute top-2 right-2 sm:top-3 sm:right-3 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all ${
+          className={`absolute top-2 right-2 sm:top-3 sm:right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
             isFavorited
               ? "bg-crimson text-ivory shadow-md scale-105"
-              : "bg-white/80 backdrop-blur-sm text-espresso hover:text-crimson hover:bg-white"
+              : "bg-white/85 backdrop-blur-sm text-espresso hover:text-crimson hover:bg-white"
           }`}
         >
           <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isFavorited ? "fill-current" : ""}`} />
         </button>
 
-        {/* Product Images (with smooth crossfade on hover) */}
-        <img
-          src={isHovered ? secondaryImage : primaryImage}
-          alt={product.name}
-          className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
+        {/* Product Image Link (Wraps only the visual image) */}
+        <Link
+          href={`/product/${product.id}`}
+          className="block w-full h-full cursor-pointer"
+          tabIndex={0}
+        >
+          <img
+            src={isHovered ? secondaryImage : primaryImage}
+            alt={product.name}
+            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        </Link>
 
-        {/* Desktop Quick View & Add Bar (Hover on desktop only) */}
-        <div className="hidden sm:flex absolute inset-x-3 bottom-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center gap-2">
-          <button
-            onClick={handleQuickView}
-            className="flex-1 py-2 px-3 bg-espresso/90 hover:bg-espresso text-ivory text-xs font-semibold uppercase tracking-wider rounded backdrop-blur-sm transition-colors flex items-center justify-center gap-1.5 shadow-lg"
-          >
-            <Eye className="w-3.5 h-3.5 text-gold" />
-            <span>Quick View</span>
-          </button>
+        {/* Quick View Button (Standalone button, sibling of Link) */}
+        <button
+          type="button"
+          onClick={handleQuickView}
+          aria-label="Quick View"
+          className="hidden sm:flex absolute right-3 bottom-3 z-20 w-8 h-8 rounded-full bg-espresso/80 hover:bg-espresso text-gold items-center justify-center backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 shadow-md"
+          title="Quick View Details"
+        >
+          <Eye className="w-4 h-4" />
+        </button>
 
-          <button
-            onClick={handleQuickAdd}
-            className={`py-2 px-3 text-xs font-semibold uppercase tracking-wider rounded backdrop-blur-sm transition-colors flex items-center justify-center shadow-lg ${
-              isAdded
-                ? "bg-green-700 text-white"
-                : "bg-burgundy hover:bg-crimson text-gold"
-            }`}
-            title="Quick Add"
-          >
-            {isAdded ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
-          </button>
+        {/* Desktop Quick Size Selector Pill Bar (Hover Overlay, Sibling of Link) */}
+        <div className="hidden sm:flex absolute inset-x-2 bottom-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-col items-center gap-1 bg-white/95 backdrop-blur-md p-2 rounded-lg border border-burgundy/15 shadow-lg">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-espresso/70">
+            {addedSize ? `Added Size ${addedSize} to Bag ✓` : "Quick Add Size to Bag:"}
+          </span>
+          <div className="flex items-center justify-center gap-1.5 flex-wrap w-full">
+            {product.sizes.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={(e) => handleSizeAdd(e, s)}
+                className={`px-2 py-1 text-[10px] font-mono font-bold rounded transition-all ${
+                  addedSize === s
+                    ? "bg-green-700 text-white scale-105"
+                    : "bg-ivory hover:bg-burgundy text-espresso hover:text-gold border border-burgundy/15"
+                }`}
+              >
+                {addedSize === s ? "✓" : s}
+              </button>
+            ))}
+          </div>
         </div>
-      </Link>
+      </div>
 
-      {/* Product Content Details — Compact Mobile Padding & Typography */}
+      {/* Product Content Details */}
       <div className="p-2.5 sm:p-4 flex flex-col flex-1 justify-between bg-white">
         <div>
           {/* Category & Rating */}
           <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-espresso/60 mb-0.5">
-            <span className="uppercase tracking-wider font-semibold text-burgundy/80">
+            <span className="uppercase tracking-wider font-semibold text-burgundy/90">
               {product.category}
             </span>
             <div className="flex items-center space-x-1">
@@ -141,45 +177,59 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </p>
         </div>
 
-        {/* Pricing, Swatches & Mobile Quick-Add Button */}
-        <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-burgundy/10 flex items-center justify-between">
-          <div className="flex items-baseline space-x-1.5 sm:space-x-2">
-            <span className="text-xs sm:text-base font-bold text-burgundy">
-              {formatPrice(product.price)}
-            </span>
-            {product.originalPrice && (
-              <span className="text-[10px] sm:text-xs text-espresso/40 line-through">
-                {formatPrice(product.originalPrice)}
+        {/* Pricing, Quick Mobile Size Strip & Color Swatches */}
+        <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-burgundy/10 flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline space-x-1.5 sm:space-x-2">
+              <span className="text-xs sm:text-base font-bold text-burgundy">
+                {formatPrice(product.price)}
               </span>
-            )}
+              {product.originalPrice && (
+                <span className="text-[10px] sm:text-xs text-espresso/40 line-through">
+                  {formatPrice(product.originalPrice)}
+                </span>
+              )}
+            </div>
+
+            {/* Mini Color Swatches */}
+            <div className="flex items-center space-x-1">
+              {product.colors.slice(0, 3).map((col) => (
+                <span
+                  key={col.name}
+                  title={col.name}
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-black/20 shadow-sm"
+                  style={{ backgroundColor: col.hex }}
+                />
+              ))}
+              {product.colors.length > 3 && (
+                <span className="text-[9px] text-espresso/50 font-medium">
+                  +{product.colors.length - 3}
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Touch-Friendly Mobile Quick Add Button */}
-          <button
-            onClick={handleQuickAdd}
-            className={`sm:hidden p-1.5 rounded-md flex items-center justify-center transition-colors shadow-xs ${
-              isAdded ? "bg-green-700 text-white" : "bg-burgundy text-gold"
-            }`}
-            aria-label="Add to bag"
-          >
-            {isAdded ? <Check className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-          </button>
-
-          {/* Mini Color Swatches (Desktop) */}
-          <div className="hidden sm:flex items-center space-x-1.5">
-            {product.colors.slice(0, 3).map((col) => (
-              <span
-                key={col.name}
-                title={col.name}
-                className="w-3 h-3 rounded-full border border-black/20 shadow-xs"
-                style={{ backgroundColor: col.hex }}
-              />
-            ))}
-            {product.colors.length > 3 && (
-              <span className="text-[10px] text-espresso/50 font-medium">
-                +{product.colors.length - 3}
-              </span>
-            )}
+          {/* Mobile Quick Size-Pill Strip (1-tap add on mobile) */}
+          <div className="sm:hidden flex items-center justify-between gap-1 pt-1 overflow-x-auto no-scrollbar">
+            <span className="text-[9px] text-espresso/50 uppercase font-mono font-bold flex-shrink-0">
+              {addedSize ? `Added ${addedSize}!` : "Size:"}
+            </span>
+            <div className="flex items-center gap-1">
+              {product.sizes.slice(0, 4).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={(e) => handleSizeAdd(e, s)}
+                  className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded border transition-all ${
+                    addedSize === s
+                      ? "bg-green-700 text-white border-green-700"
+                      : "bg-ivory border-burgundy/20 text-espresso active:bg-burgundy active:text-gold"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

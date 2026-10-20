@@ -7,16 +7,26 @@ import {
   Sparkles,
   ChevronRight,
   Quote,
+  Flame,
+  Truck,
+  Layers,
+  Ruler,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { ProductCard } from "@/components/ProductCard";
 import { FlyingWearHero } from "@/components/FlyingWearHero";
 import { SilhouetteStudio } from "@/components/SilhouetteStudio";
 import { GeoFaqSection } from "@/components/GeoFaqSection";
+import { FabricSpecLab } from "@/components/FabricSpecLab";
+import { ShopTheFitSection } from "@/components/ShopTheFitSection";
+import { CommunityStreetwearWall } from "@/components/CommunityStreetwearWall";
+import { OffcultAssistDrawer } from "@/components/OffcultAssistDrawer";
+import { LiveCourierTrackerModal } from "@/components/LiveCourierTrackerModal";
 
 export default function HomePage() {
   const { products, siteSettings } = useStore();
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [isTrackerOpen, setIsTrackerOpen] = useState(false);
 
   const featuredProducts =
     activeCategory === "All"
@@ -57,7 +67,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-10 sm:space-y-16 md:space-y-24 pb-12 sm:pb-20">
-      {/* 1. HERO SECTION WITH DYNAMIC ADMIN HEADLINES & FLYING WEAR SHOWCASE */}
+      {/* 1. HERO SECTION WITH DYNAMIC HEADLINES & FLYING WEAR SHOWCASE */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 md:pt-10 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-12 items-center">
           {/* Left Hero Narrative */}
@@ -103,6 +113,7 @@ export default function HomePage() {
                 { label: "Jeans", href: "/jeans" },
                 { label: "Boxy Fit", href: "/boxy-fit" },
                 { label: "Jackets", href: "/jackets" },
+                { label: "Fabric Lab", href: "#fabric-lab" },
               ].map((pill) => (
                 <Link
                   key={pill.label}
@@ -143,14 +154,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Hero: Flying Luxury Wear Showcase (3D on Desktop, Compact on Mobile) */}
+          {/* Right Hero: Flying Luxury Wear Showcase */}
           <div className="lg:col-span-6 w-full">
             <FlyingWearHero />
           </div>
         </div>
       </section>
 
-      {/* 2. RUNWAY TICKER MARQUEE (Dynamic Phrases from Admin) */}
+      {/* 2. RUNWAY TICKER MARQUEE */}
       <div className="bg-espresso text-gold py-2 sm:py-3 overflow-hidden border-y border-burgundy/30 select-none">
         <div className="flex whitespace-nowrap animate-marquee space-x-8 sm:space-x-12 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em]">
           {siteSettings.marqueePhrases.concat(siteSettings.marqueePhrases).map((phrase, idx) => (
@@ -162,12 +173,12 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. CURATED SILHOUETTES GRID (2-column mobile layout per /mobile-design) */}
+      {/* 3. FOUR SILHOUETTES SHOWCASE */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 sm:mb-8 pb-3 border-b border-burgundy/15 gap-2">
           <div>
             <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-0.5">
-              Curated Wardrobe
+              Curated Wardrobe Pillars
             </span>
             <h2 className="font-serif text-xl sm:text-3xl font-bold text-espresso">
               The Four Silhouettes
@@ -177,7 +188,7 @@ export default function HomePage() {
             href="/shop"
             className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-burgundy hover:text-crimson flex items-center gap-1 transition-colors self-start sm:self-auto"
           >
-            <span>View All Categories</span>
+            <span>View All Drops</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -219,12 +230,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. TRENDING NOW SPOTLIGHT (2-column mobile layout per /mobile-design) */}
+      {/* 4. SEASONAL HIGHLIGHTS WITH FABRIC BADGES & QUICK SIZE PILL SELECTION */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 sm:mb-8 pb-3 border-b border-burgundy/15 gap-2">
           <div>
             <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-0.5">
-              Seasonal Highlights
+              Seasonal Releases
             </span>
             <h2 className="font-serif text-xl sm:text-3xl font-bold text-espresso">
               Trending In Tokyo & Milan
@@ -263,10 +274,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. INTERACTIVE SILHOUETTE STUDIO (MID-SITE LAB) */}
+      {/* 5. HEAVYWEIGHT FABRIC & MILL ENGINEERING LAB (OFFCULT / Off Duty Signature) */}
+      <FabricSpecLab />
+
+      {/* 6. SHOP THE COMPLETE FIT - CURATED OUTFIT BUNDLER (Off Duty Signature) */}
+      <ShopTheFitSection />
+
+      {/* 7. INTERACTIVE SILHOUETTE STUDIO (DRAPE & STACKING LAB) */}
       <SilhouetteStudio />
 
-      {/* 6. EDITORIAL LOOKBOOK TEASER */}
+      {/* 8. WORN ON THE STREETS - REAL BODY FIT CHECKS (Off Duty Signature Social Proof) */}
+      <CommunityStreetwearWall />
+
+      {/* 9. EDITORIAL LOOKBOOK TEASER */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-burgundy text-ivory p-6 sm:p-12 lg:p-20 shadow-xl">
           <div className="relative z-10 max-w-xl space-y-3 sm:space-y-5">
@@ -301,7 +321,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. PRESS & VIP CLIENT TESTIMONIALS */}
+      {/* 10. PRESS & VIP CLIENT TESTIMONIALS */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-0.5">
@@ -348,8 +368,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. GEO & SARTORIAL CITABILITY FAQ */}
+      {/* 11. GEO & SARTORIAL CITABILITY FAQ */}
       <GeoFaqSection />
+
+      {/* 12. FLOATING FIT CONCIERGE & MODALS */}
+      <OffcultAssistDrawer onOpenTracker={() => setIsTrackerOpen(true)} />
+
+      <LiveCourierTrackerModal
+        isOpen={isTrackerOpen}
+        onClose={() => setIsTrackerOpen(false)}
+      />
     </div>
   );
 }

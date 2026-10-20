@@ -12,9 +12,14 @@ import {
   X,
   ArrowRight,
   Flame,
+  Truck,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useStore } from "@/context/StoreContext";
+import { QuickCommandMenu } from "@/components/QuickCommandMenu";
+import { LiveCourierTrackerModal } from "@/components/LiveCourierTrackerModal";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
@@ -22,15 +27,15 @@ export const Header: React.FC = () => {
   const { cartItemsCount, wishlist, setIsCartOpen, siteSettings } = useStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [isCommandMenuOpen, setIsCommandMenuOpen] = useState(false);
+  const [isTrackerOpen, setIsTrackerOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAnnouncementDismissed, setIsAnnouncementDismissed] = useState(false);
 
   // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
-    setIsSearchOpen(false);
+    setIsCommandMenuOpen(false);
   }, [pathname]);
 
   // Track scroll for sticky luxury header refinement
@@ -42,31 +47,52 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // All 4 categories placed side-by-side on the left side
+  // Global Cmd+K / Ctrl+K keyboard shortcut listener (OFFCULT style)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsCommandMenuOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // All 4 categories placed side-by-side on the left side + Fabric Lab
   const navCategories = [
     { label: "Oversized", href: "/oversized" },
     { label: "Jeans", href: "/jeans" },
     { label: "Boxy Fit", href: "/boxy-fit" },
     { label: "Jackets", href: "/jackets" },
+    { label: "Fabric Lab", href: "/#fabric-lab" },
   ];
 
   const allNavLinks = [
     { label: "All Drops", href: "/shop" },
-    { label: "Oversized", href: "/oversized" },
-    { label: "Jeans", href: "/jeans" },
-    { label: "Boxy Fit", href: "/boxy-fit" },
-    { label: "Jackets", href: "/jackets" },
-    { label: "Lookbook", href: "/lookbook" },
-    { label: "Heritage", href: "/about" },
+    { label: "Oversized (520gsm)", href: "/oversized" },
+    { label: "Jeans (15oz Selvedge)", href: "/jeans" },
+    { label: "Boxy Fit (320gsm)", href: "/boxy-fit" },
+    { label: "Jackets (700gsm)", href: "/jackets" },
+    { label: "Fabric & Mill Lab", href: "/#fabric-lab" },
+    { label: "Editorial Lookbook", href: "/lookbook" },
+    { label: "Atelier Heritage", href: "/about" },
   ];
 
   return (
     <>
-      {/* Top Announcement Bar (Configurable in Admin Portal) */}
+      {/* Top Announcement Bar with Live Courier Tracker Trigger */}
       {siteSettings?.topAnnouncement?.enabled && !isAnnouncementDismissed && (
         <div className="bg-espresso text-gold py-1.5 px-3 text-center text-[10px] sm:text-xs font-semibold tracking-wider uppercase border-b border-burgundy/30 select-none relative">
-          <div className="max-w-7xl mx-auto flex items-center justify-center gap-1.5 flex-wrap pr-6">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-4 flex-wrap pr-6">
             <span>{siteSettings.topAnnouncement.text}</span>
+            <button
+              onClick={() => setIsTrackerOpen(true)}
+              className="hidden sm:inline-flex items-center gap-1 text-ivory hover:text-gold transition-colors font-bold underline cursor-pointer"
+            >
+              <Truck className="w-3 h-3 text-gold" />
+              <span>Track Live Delivery</span>
+            </button>
             {siteSettings.topAnnouncement.linkUrl && (
               <Link
                 href={siteSettings.topAnnouncement.linkUrl}
@@ -108,7 +134,7 @@ export const Header: React.FC = () => {
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
 
-              <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7">
+              <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
                 {navCategories.map((link) => {
                   const isActive = pathname === link.href;
                   return (
@@ -137,16 +163,39 @@ export const Header: React.FC = () => {
               />
             </div>
 
-            {/* Right Action Icons */}
-            <div className="flex-1 flex items-center justify-end space-x-2 sm:space-x-5">
-              {/* Search Toggle */}
+            {/* Right Action Icons & Command Palette Trigger */}
+            <div className="flex-1 flex items-center justify-end space-x-1.5 sm:space-x-3">
+              {/* Command Palette Trigger Button (OFFCULT style ⌘K Search Pill) */}
               <button
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="p-2 text-burgundy hover:text-crimson transition-colors relative group"
+                onClick={() => setIsCommandMenuOpen(true)}
+                className="hidden md:flex items-center space-x-2 py-1.5 px-3 rounded-full bg-white border border-burgundy/15 text-espresso/70 hover:border-burgundy hover:text-espresso transition-all text-xs shadow-2xs group"
+                aria-label="Open Command Search"
+              >
+                <Search className="w-3.5 h-3.5 text-burgundy group-hover:scale-110 transition-transform" />
+                <span className="font-medium text-[11px]">Search Drops</span>
+                <kbd className="font-mono text-[9px] font-bold bg-ivory px-1.5 py-0.5 rounded border border-burgundy/15 text-burgundy">
+                  ⌘K
+                </kbd>
+              </button>
+
+              {/* Mobile Search Icon */}
+              <button
+                onClick={() => setIsCommandMenuOpen(true)}
+                className="md:hidden p-2 text-burgundy hover:text-crimson transition-colors relative"
                 aria-label="Search Collection"
               >
                 <Search className="w-5 h-5" />
-                <span className="sr-only">Search</span>
+              </button>
+
+              {/* Direct Track Courier Quick Button (Desktop) */}
+              <button
+                onClick={() => setIsTrackerOpen(true)}
+                className="hidden lg:flex items-center space-x-1.5 py-1.5 px-2.5 rounded-md text-xs font-semibold text-espresso hover:text-burgundy transition-colors"
+                title="Track Live Courier"
+                aria-label="Track Courier"
+              >
+                <Truck className="w-4 h-4 text-burgundy" />
+                <span className="text-[11px] tracking-wider uppercase">Track</span>
               </button>
 
               {/* Wishlist Icon */}
@@ -190,38 +239,6 @@ export const Header: React.FC = () => {
               </Link>
             </div>
           </div>
-
-          {/* Expandable Search Drawer */}
-          {isSearchOpen && (
-            <div className="mt-3 pt-3 border-t border-burgundy/10 pb-2 transition-all">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (searchQuery.trim()) {
-                    router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-                    setIsSearchOpen(false);
-                  }
-                }}
-                className="relative flex items-center"
-              >
-                <Search className="absolute left-4 w-5 h-5 text-burgundy/50" />
-                <input
-                  type="text"
-                  placeholder="Search Oversized Hoodies, Baggy Jeans, Boxy Knits, Suede Jackets..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                  className="w-full bg-ivory-dark pl-12 pr-28 py-3 text-sm rounded border border-burgundy/20 text-espresso placeholder-espresso/50 focus:outline-none focus:border-burgundy"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-2 px-4 py-1.5 bg-burgundy hover:bg-crimson text-ivory text-xs font-semibold uppercase tracking-wider rounded transition-colors"
-                >
-                  Explore
-                </button>
-              </form>
-            </div>
-          )}
         </div>
 
         {/* Mobile Navigation Drawer */}
@@ -249,12 +266,12 @@ export const Header: React.FC = () => {
                   </button>
                 </div>
 
-                <nav className="flex flex-col space-y-4">
+                <nav className="flex flex-col space-y-3">
                   {allNavLinks.map((link) => (
                     <Link
                       key={link.label}
                       href={link.href}
-                      className="text-base font-bold uppercase tracking-widest text-espresso hover:text-crimson transition-colors flex items-center justify-between py-2 border-b border-ivory-dark"
+                      className="text-sm font-bold uppercase tracking-widest text-espresso hover:text-crimson transition-colors flex items-center justify-between py-2 border-b border-ivory-dark"
                     >
                       <span>{link.label}</span>
                       <ArrowRight className="w-4 h-4 text-burgundy/40" />
@@ -262,10 +279,24 @@ export const Header: React.FC = () => {
                   ))}
                 </nav>
 
-                <div className="pt-4 space-y-3">
+                <div className="pt-2 space-y-2">
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsTrackerOpen(true);
+                    }}
+                    className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-espresso py-2 px-3 rounded-lg bg-white border border-burgundy/15"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Truck className="w-4 h-4 text-burgundy" />
+                      <span>Track Live Courier</span>
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 text-espresso/40" />
+                  </button>
+
                   <Link
                     href="/saved"
-                    className="flex items-center space-x-3 text-sm font-medium text-espresso py-1"
+                    className="flex items-center space-x-3 text-sm font-medium text-espresso py-1.5 px-3"
                   >
                     <Heart className="w-4 h-4 text-crimson" />
                     <span>Saved Wishlist ({wishlist.length})</span>
@@ -273,7 +304,7 @@ export const Header: React.FC = () => {
 
                   <Link
                     href="/profile"
-                    className="flex items-center space-x-3 text-sm font-medium text-espresso py-1"
+                    className="flex items-center space-x-3 text-sm font-medium text-espresso py-1.5 px-3"
                   >
                     <User className="w-4 h-4 text-burgundy" />
                     <span>Client Profile</span>
@@ -292,6 +323,18 @@ export const Header: React.FC = () => {
           </div>
         )}
       </header>
+
+      {/* Global Modals Mounted Accessible Throughout Site */}
+      <QuickCommandMenu
+        isOpen={isCommandMenuOpen}
+        onClose={() => setIsCommandMenuOpen(false)}
+        onOpenTracker={() => setIsTrackerOpen(true)}
+      />
+
+      <LiveCourierTrackerModal
+        isOpen={isTrackerOpen}
+        onClose={() => setIsTrackerOpen(false)}
+      />
     </>
   );
 };
