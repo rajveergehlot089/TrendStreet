@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Shield, Lock, Mail, ArrowRight, AlertCircle, CheckCircle, Sparkles } from "lucide-react";
+import { Shield, Lock, Mail, ArrowRight, AlertCircle, CheckCircle, Sparkles, Eye, EyeOff } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAdminAuth } from "@/context/AdminAuthContext";
 
@@ -13,15 +13,16 @@ export default function AdminLoginPage() {
 
   const [adminId, setAdminId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   // If already authenticated, redirect safely via useEffect
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/admin");
+      window.location.href = "/admin";
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ export default function AdminLoginPage() {
 
     const res = await login(adminId, password);
     if (res.success) {
-      router.push("/admin");
+      window.location.href = "/admin";
     } else {
       setError(res.message);
       setLoading(false);
@@ -77,7 +78,8 @@ export default function AdminLoginPage() {
                   required
                   value={adminId}
                   onChange={(e) => setAdminId(e.target.value)}
-                  placeholder="sujal@.com"
+                  placeholder="Enter Admin ID or Email"
+                  autoComplete="username"
                   className="w-full bg-white pl-10 pr-3 py-2.5 rounded-xl border border-burgundy/20 text-xs font-medium text-espresso focus:outline-none focus:border-burgundy"
                 />
               </div>
@@ -91,13 +93,27 @@ export default function AdminLoginPage() {
               <div className="relative">
                 <Lock className="absolute left-3.5 top-3 w-4 h-4 text-espresso/40" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full bg-white pl-10 pr-3 py-2.5 rounded-xl border border-burgundy/20 text-xs font-medium text-espresso focus:outline-none focus:border-burgundy"
+                  placeholder="Enter Password"
+                  autoComplete="current-password"
+                  className="w-full bg-white pl-10 pr-10 py-2.5 rounded-xl border border-burgundy/20 text-xs font-medium text-espresso focus:outline-none focus:border-burgundy"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2.5 p-1 text-espresso/50 hover:text-burgundy transition-colors focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
 
@@ -110,7 +126,6 @@ export default function AdminLoginPage() {
                 />
                 <span>Remember Session</span>
               </label>
-              <span className="text-[11px] text-burgundy/80 font-medium">2FA Required</span>
             </div>
 
             <button
