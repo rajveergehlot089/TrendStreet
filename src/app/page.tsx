@@ -17,7 +17,10 @@ import { ProductCard } from "@/components/ProductCard";
 import { FlyingWearHero } from "@/components/FlyingWearHero";
 import { SilhouetteStudio } from "@/components/SilhouetteStudio";
 import { GeoFaqSection } from "@/components/GeoFaqSection";
-import { FabricSpecLab } from "@/components/FabricSpecLab";
+import { NewArrivalsDropRadar } from "@/components/NewArrivalsDropRadar";
+import { StreetwearLookbookMatrix } from "@/components/StreetwearLookbookMatrix";
+import { StreetwearPerksMatrix } from "@/components/StreetwearPerksMatrix";
+import { LimitedEditionVault } from "@/components/LimitedEditionVault";
 import { ShopTheFitSection } from "@/components/ShopTheFitSection";
 import { CommunityStreetwearWall } from "@/components/CommunityStreetwearWall";
 import { OffcultAssistDrawer } from "@/components/OffcultAssistDrawer";
@@ -67,9 +70,9 @@ export default function HomePage() {
 
   return (
     <div className="space-y-10 sm:space-y-16 md:space-y-24 pb-12 sm:pb-20">
-      {/* 1. HERO SECTION WITH DYNAMIC HEADLINES & FLYING WEAR SHOWCASE */}
+      {/* 1. HERO SECTION WITH DYNAMIC HEADLINES & RESPONSIVE SHOWCASE (Mobile New Arrivals + Desktop 3D) */}
       <section className="relative px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 md:pt-10 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           {/* Left Hero Narrative */}
           <div className="lg:col-span-6 space-y-4 sm:space-y-6 text-left">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-burgundy/10 text-burgundy text-[10px] sm:text-xs font-bold uppercase tracking-widest">
@@ -109,11 +112,12 @@ export default function HomePage() {
             {/* Mobile Quick Silhouette Capsules */}
             <div className="flex sm:hidden items-center gap-1.5 pt-1 overflow-x-auto no-scrollbar pb-1">
               {[
+                { label: "New Arrivals", href: "#new-arrivals" },
                 { label: "Oversized", href: "/oversized" },
                 { label: "Jeans", href: "/jeans" },
                 { label: "Boxy Fit", href: "/boxy-fit" },
                 { label: "Jackets", href: "/jackets" },
-                { label: "Fabric Lab", href: "#fabric-lab" },
+                { label: "Shop The Fit", href: "#shop-the-fit" },
               ].map((pill) => (
                 <Link
                   key={pill.label}
@@ -154,7 +158,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Hero: Flying Luxury Wear Showcase */}
+          {/* Right Hero: Responsive Showcase (Mobile Touch Card Deck + Desktop 3D Cloth Physics) */}
           <div className="lg:col-span-6 w-full">
             <FlyingWearHero />
           </div>
@@ -173,7 +177,10 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. FOUR SILHOUETTES SHOWCASE */}
+      {/* 3. STREETWEAR VIP PERKS & ASSURANCE MATRIX (Blue Dart Air, 30-Day Doorstep Swap, 320gsm Guarantee) */}
+      <StreetwearPerksMatrix />
+
+      {/* 4. FOUR SILHOUETTES SHOWCASE */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 sm:mb-8 pb-3 border-b border-burgundy/15 gap-2">
           <div>
@@ -230,7 +237,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. SEASONAL HIGHLIGHTS WITH FABRIC BADGES & QUICK SIZE PILL SELECTION */}
+      {/* 5. NEW ARRIVALS DROP RADAR & LIVE RESTOCK TICKER */}
+      <NewArrivalsDropRadar />
+
+      {/* 6. SHOP THE COMPLETE FIT - CURATED OUTFIT BUNDLER (Off Duty Signature) */}
+      <div id="shop-the-fit">
+        <ShopTheFitSection />
+      </div>
+
+      {/* 7. LIMITED EDITION VAULT CAPSULE (The Midnight Capsule - 120 Units Worldwide) */}
+      <LimitedEditionVault />
+
+      {/* 8. SARTORIAL STREETWEAR LOOKBOOK: TOKYO TO BANDRA */}
+      <StreetwearLookbookMatrix />
+
+      {/* 9. SEASONAL HIGHLIGHTS WITH QUICK SIZE PILL SELECTION */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 sm:mb-8 pb-3 border-b border-burgundy/15 gap-2">
           <div>
@@ -274,19 +295,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. HEAVYWEIGHT FABRIC & MILL ENGINEERING LAB (OFFCULT / Off Duty Signature) */}
-      <FabricSpecLab />
-
-      {/* 6. SHOP THE COMPLETE FIT - CURATED OUTFIT BUNDLER (Off Duty Signature) */}
-      <ShopTheFitSection />
-
-      {/* 7. INTERACTIVE SILHOUETTE STUDIO (DRAPE & STACKING LAB) */}
+      {/* 10. INTERACTIVE SILHOUETTE STUDIO (DRAPE & STACKING LAB) */}
       <SilhouetteStudio />
 
-      {/* 8. WORN ON THE STREETS - REAL BODY FIT CHECKS (Off Duty Signature Social Proof) */}
+      {/* 11. WORN ON THE STREETS - REAL BODY FIT CHECKS (Social Proof across Indian Cities) */}
       <CommunityStreetwearWall />
 
-      {/* 9. EDITORIAL LOOKBOOK TEASER */}
+      {/* 12. EDITORIAL DOSSIER TEASER */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-burgundy text-ivory p-6 sm:p-12 lg:p-20 shadow-xl">
           <div className="relative z-10 max-w-xl space-y-3 sm:space-y-5">
@@ -321,7 +336,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 10. PRESS & VIP CLIENT TESTIMONIALS */}
+      {/* 13. PRESS & VIP CLIENT TESTIMONIALS */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
           <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-0.5">
@@ -368,10 +383,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 11. GEO & SARTORIAL CITABILITY FAQ */}
+      {/* 14. GEO & SARTORIAL CITABILITY FAQ */}
       <GeoFaqSection />
 
-      {/* 12. FLOATING FIT CONCIERGE & MODALS */}
+      {/* 15. FLOATING FIT CONCIERGE & MODALS */}
       <OffcultAssistDrawer onOpenTracker={() => setIsTrackerOpen(true)} />
 
       <LiveCourierTrackerModal

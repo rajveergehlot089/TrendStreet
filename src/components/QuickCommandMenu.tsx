@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -40,18 +40,22 @@ export const QuickCommandMenu: React.FC<QuickCommandMenuProps> = ({
     }
   }, [isOpen]);
 
-  // Clean query and matching products
+  // Clean query and matching products (memoized to keep dependency stable)
   const cleanQuery = query.toLowerCase().trim();
-  const matchingProducts = cleanQuery
-    ? products.filter(
-        (p) =>
-          p.name.toLowerCase().includes(cleanQuery) ||
-          p.category.toLowerCase().includes(cleanQuery) ||
-          p.fabric.toLowerCase().includes(cleanQuery) ||
-          p.subtitle.toLowerCase().includes(cleanQuery) ||
-          p.tags.some((t) => t.toLowerCase().includes(cleanQuery))
-      ).slice(0, 5)
-    : [];
+  const matchingProducts = useMemo(() => {
+    return cleanQuery
+      ? products
+          .filter(
+            (p) =>
+              p.name.toLowerCase().includes(cleanQuery) ||
+              p.category.toLowerCase().includes(cleanQuery) ||
+              p.fabric.toLowerCase().includes(cleanQuery) ||
+              p.subtitle.toLowerCase().includes(cleanQuery) ||
+              p.tags.some((t) => t.toLowerCase().includes(cleanQuery))
+          )
+          .slice(0, 5)
+      : [];
+  }, [cleanQuery, products]);
 
   const handleNavigate = useCallback(
     (path: string) => {
@@ -266,13 +270,14 @@ export const QuickCommandMenu: React.FC<QuickCommandMenuProps> = ({
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   onClose();
-                  const labEl = document.getElementById("fabric-lab");
-                  if (labEl) {
-                    labEl.scrollIntoView({ behavior: "smooth" });
+                  const arrivalsEl = document.getElementById("new-arrivals");
+                  if (arrivalsEl) {
+                    arrivalsEl.scrollIntoView({ behavior: "smooth" });
                   } else {
-                    router.push("/#fabric-lab");
+                    router.push("/shop");
                   }
                 }}
                 className="p-2.5 rounded-xl border border-burgundy/10 bg-white hover:bg-ivory text-left flex items-center justify-between group transition-colors"
@@ -283,10 +288,10 @@ export const QuickCommandMenu: React.FC<QuickCommandMenuProps> = ({
                   </div>
                   <div>
                     <span className="text-xs font-bold text-espresso group-hover:text-crimson block">
-                      Fabric & Mill Lab
+                      New Arrivals Drop Radar
                     </span>
                     <span className="text-[10px] text-espresso/60 block">
-                      GSM & Selvedge Blueprint
+                      Explore Latest AW26 Releases
                     </span>
                   </div>
                 </div>

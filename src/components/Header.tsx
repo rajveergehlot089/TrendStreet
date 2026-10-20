@@ -59,13 +59,12 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // All 4 categories placed side-by-side on the left side + Fabric Lab
+  // All 4 categories strictly placed side-by-side on the left side
   const navCategories = [
     { label: "Oversized", href: "/oversized" },
     { label: "Jeans", href: "/jeans" },
     { label: "Boxy Fit", href: "/boxy-fit" },
     { label: "Jackets", href: "/jackets" },
-    { label: "Fabric Lab", href: "/#fabric-lab" },
   ];
 
   const allNavLinks = [
@@ -74,7 +73,6 @@ export const Header: React.FC = () => {
     { label: "Jeans (15oz Selvedge)", href: "/jeans" },
     { label: "Boxy Fit (320gsm)", href: "/boxy-fit" },
     { label: "Jackets (700gsm)", href: "/jackets" },
-    { label: "Fabric & Mill Lab", href: "/#fabric-lab" },
     { label: "Editorial Lookbook", href: "/lookbook" },
     { label: "Atelier Heritage", href: "/about" },
   ];
