@@ -129,6 +129,80 @@
       "priority": 9,
       "passes": true,
       "notes": "Comprehensive SEO and GEO setup: robots.txt, llms.txt with 134-167 word passage citability, dynamic sitemap.ts, and JSON-LD schema."
+    },
+    {
+      "id": "US-010",
+      "title": "Defensive Security, IP Rate Limiter & Webhook Verification",
+      "description": "As a security engineer, I want IP sliding-window rate limiting on login and constant-time webhook verification.",
+      "acceptanceCriteria": [
+        "Sliding-window rate limiter prevents brute-force login",
+        "Constant-time signature verification prevents timing attacks",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Implemented sliding-window rate limiter, constant-time HMAC check in payment webhook, and 10,000-event deduplication cache."
+    },
+    {
+      "id": "US-011",
+      "title": "India-First Logistics, 6-Digit PIN Engine & INR Currency",
+      "description": "As an Indian shopper, I want prices in INR, all-inclusive 12% GST, and live PIN code delivery estimates.",
+      "acceptanceCriteria": [
+        "PIN code validation for 6-digit Indian postal codes",
+        "Blue Dart Apex & Delhivery Air transit SLAs",
+        "Integer minor units in paise with en-IN formatting",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Pincode engine with circle mapping and Blue Dart/Delhivery transit estimation, paise pricing engine, and ₹1,999 free shipping threshold."
+    },
+    {
+      "id": "US-012",
+      "title": "High-Converting Indian D2C Checkout",
+      "description": "As a shopper, I want to checkout with Indian address format, UPI, Cards, Net Banking, and COD.",
+      "acceptanceCriteria": [
+        "3-step Indian checkout flow",
+        "28 States and 8 UTs dropdown",
+        "UPI, RuPay, Net Banking, and COD options",
+        "Server-authoritative validation",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "High-converting checkout with live PIN serviceability check, UPI apps/QR, Indian banks, and server-side pricing validation."
+    },
+    {
+      "id": "US-013",
+      "title": "Statutory Indian Legal Compliance Pages",
+      "description": "As a consumer, I want access to statutory Indian e-commerce policies and Grievance Officer details.",
+      "acceptanceCriteria": [
+        "DPDP Act 2023 compliant Privacy Policy",
+        "Consumer Protection (E-Commerce) Rules 2020 Terms",
+        "Shipping and 30-day Return policies",
+        "Designated Grievance Redressal Officer disclosures",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "5 statutory pages implemented with active footer links, 30-day doorstep return protocol, and Grievance Officer Rohan Kulkarni details."
+    },
+    {
+      "id": "US-014",
+      "title": "Automated Testing Suite & Code Review Quality Gates",
+      "description": "As a release manager, I want 100% automated test coverage on security, pricing, and logistics.",
+      "acceptanceCriteria": [
+        "Unit tests pass",
+        "Typecheck passes",
+        "ESLint passes",
+        "Next.js build passes with 27 routes",
+        "Code review passes"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "15 unit tests passing covering authentication, paise calculations, shipping waivers, and PIN validation; 27/27 routes compiled cleanly."
     }
   ]
 }

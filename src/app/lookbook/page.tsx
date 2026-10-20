@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Sparkles, ShoppingBag, Eye, ArrowRight, X, Star } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { Product } from "@/types/store";
+import { formatPrice } from "@/lib/pricing";
 
 interface LookbookItem {
   id: string;
@@ -30,13 +31,13 @@ const LOOKBOOK_DATA: LookbookItem[] = [
     hotspots: [
       {
         productId: "ts-001",
-        label: "Mayfair Heavyweight Tee ($160)",
+        label: "Mayfair Heavyweight Tee (₹2,499)",
         x: 48,
         y: 45,
       },
       {
         productId: "ts-004",
-        label: "Shibuya Carpenter Jeans ($320)",
+        label: "Shibuya Carpenter Jeans (₹5,499)",
         x: 52,
         y: 75,
       },
@@ -51,13 +52,13 @@ const LOOKBOOK_DATA: LookbookItem[] = [
     hotspots: [
       {
         productId: "ts-010",
-        label: "Tuscan Suede Flight Jacket ($1,250)",
+        label: "Tuscan Suede Flight Jacket (₹11,999)",
         x: 52,
         y: 42,
       },
       {
         productId: "ts-002",
-        label: "Tokyo Oversized Hoodie ($340)",
+        label: "Tokyo Oversized Hoodie (₹4,999)",
         x: 48,
         y: 58,
       },
@@ -72,13 +73,13 @@ const LOOKBOOK_DATA: LookbookItem[] = [
     hotspots: [
       {
         productId: "ts-007",
-        label: "Boxy Heavyweight Poplin Shirt ($220)",
+        label: "Boxy Heavyweight Poplin Shirt (₹3,499)",
         x: 50,
         y: 35,
       },
       {
         productId: "ts-006",
-        label: "Raw Indigo Baggy Jeans ($340)",
+        label: "Raw Indigo Baggy Jeans (₹5,999)",
         x: 52,
         y: 75,
       },
@@ -188,7 +189,7 @@ export default function LookbookPage() {
                         />
                         <div className="text-xs">
                           <h4 className="font-serif font-bold text-espresso">{p.name}</h4>
-                          <span className="text-burgundy font-bold">${p.price.toLocaleString()}</span>
+                          <span className="text-burgundy font-bold">{formatPrice(p.price)}</span>
                         </div>
                       </div>
 
@@ -227,7 +228,7 @@ export default function LookbookPage() {
                 </span>
                 <h3 className="font-serif text-xl font-bold text-espresso">{activeProduct.name}</h3>
                 <span className="text-base font-bold text-burgundy">
-                  ${activeProduct.price.toLocaleString()}
+                  {formatPrice(activeProduct.price)}
                 </span>
               </div>
               <button onClick={() => setActiveProduct(null)} className="p-1 text-espresso/60 hover:text-burgundy">

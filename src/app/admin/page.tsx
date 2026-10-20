@@ -13,6 +13,7 @@ import {
   Clock,
   CheckCircle,
   ExternalLink,
+  Sliders,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { useAdminAuth } from "@/context/AdminAuthContext";
@@ -42,10 +43,18 @@ export default function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            href="/admin/settings"
+            className="py-2.5 px-4 bg-burgundy hover:bg-crimson text-gold text-xs font-bold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
+          >
+            <Sliders className="w-3.5 h-3.5" />
+            <span>Site Customizer (Live)</span>
+          </Link>
+
           <Link
             href="/admin/products"
-            className="py-2.5 px-4 bg-burgundy hover:bg-crimson text-gold text-xs font-bold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
+            className="py-2.5 px-4 bg-white border border-burgundy/25 hover:border-burgundy text-burgundy text-xs font-bold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-1.5"
           >
             <Shirt className="w-3.5 h-3.5" />
             <span>Manage Products</span>
@@ -104,7 +113,7 @@ export default function AdminDashboardPage() {
             ${averageOrderValue.toLocaleString()}
           </span>
           <p className="text-[11px] text-espresso/60">
-            High-ticket bespoke outerwear & suits
+            Luxury jackets & oversized streetwear outerwear
           </p>
         </div>
 

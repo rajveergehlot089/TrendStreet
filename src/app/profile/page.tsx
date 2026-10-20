@@ -18,6 +18,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { formatPrice } from "@/lib/pricing";
 
 export default function ProfilePage() {
   const { user, orders, updateUserProfile } = useStore();
@@ -71,7 +72,7 @@ export default function ProfilePage() {
       <div className="border-b border-burgundy/15 flex space-x-6 text-xs font-bold uppercase tracking-wider overflow-x-auto pb-1">
         {[
           { id: "orders", label: `Order History (${orders.length})`, icon: Package },
-          { id: "measurements", label: "Bespoke Measurements", icon: Ruler },
+          { id: "measurements", label: "Silhouette Fit Profile", icon: Ruler },
           { id: "addresses", label: "Delivery Addresses", icon: MapPin },
           { id: "membership", label: "VIP Privileges", icon: Award },
         ].map((tab) => {
@@ -130,7 +131,7 @@ export default function ProfilePage() {
                     </span>
 
                     <span className="text-sm font-bold text-espresso">
-                      ${ord.total.toLocaleString()}
+                      {formatPrice(ord.total)}
                     </span>
                   </div>
                 </div>
@@ -149,7 +150,7 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-espresso/60">
                           Size: {item.selectedSize} | Color: {item.selectedColor}
                         </p>
-                        <p className="font-bold text-burgundy">${item.price.toLocaleString()}</p>
+                        <p className="font-bold text-burgundy">{formatPrice(item.price)}</p>
                       </div>
                     </div>
                   ))}
@@ -176,33 +177,78 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* TAB 2: BESPOKE MEASUREMENTS PROFILE */}
+      {/* TAB 2: SILHOUETTE FIT & SIZING PROFILE */}
       {activeTab === "measurements" && (
         <div className="bg-white rounded-3xl border border-burgundy/15 p-6 sm:p-8 shadow-xs space-y-6 animate-in fade-in duration-200">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-burgundy/10 gap-2">
             <div>
               <h3 className="font-serif text-xl font-bold text-espresso">
-                Personalized Tailoring Specifications
+                Personal Silhouette & Fit Specifications
               </h3>
               <p className="text-xs text-espresso/60 mt-0.5">
-                Our master tailors reference these exact measurements for complimentary alterations.
+                Saved sizing defaults for Oversized tees, Boxy hoodies, Flight Jackets, and Selvedge Denim.
               </p>
             </div>
             {isSaved && (
               <span className="text-xs font-bold text-green-800 flex items-center gap-1">
-                <CheckCircle className="w-4 h-4" /> Measurements Updated
+                <CheckCircle className="w-4 h-4" /> Fit Profile Updated
               </span>
             )}
           </div>
 
           <form onSubmit={handleSaveMeasurements} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
             <div>
-              <label className="block font-semibold text-espresso mb-1">Standard Jacket Size</label>
+              <label className="block font-semibold text-espresso mb-1">Oversized Tops (Tees & Hoodies)</label>
+              <input
+                type="text"
+                value={measurements.oversizedFit}
+                onChange={(e) => setMeasurements({ ...measurements, oversizedFit: e.target.value })}
+                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
+                placeholder="e.g. L (Relaxed Architectural)"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-espresso mb-1">Boxy Fit Cut (Cropped Drape)</label>
+              <input
+                type="text"
+                value={measurements.boxyFit}
+                onChange={(e) => setMeasurements({ ...measurements, boxyFit: e.target.value })}
+                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
+                placeholder="e.g. M (Structured Box Crop)"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-espresso mb-1">Outerwear & Flight Jackets</label>
               <input
                 type="text"
                 value={measurements.jacketSize}
                 onChange={(e) => setMeasurements({ ...measurements, jacketSize: e.target.value })}
                 className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
+                placeholder="e.g. L (Layered Flight Cut)"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-espresso mb-1">Selvedge Denim Waist</label>
+              <input
+                type="text"
+                value={measurements.denimWaist}
+                onChange={(e) => setMeasurements({ ...measurements, denimWaist: e.target.value })}
+                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
+                placeholder="e.g. 32W"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-espresso mb-1">Selvedge Denim Inseam (Length)</label>
+              <input
+                type="text"
+                value={measurements.denimLength}
+                onChange={(e) => setMeasurements({ ...measurements, denimLength: e.target.value })}
+                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
+                placeholder="e.g. 32L"
               />
             </div>
 
@@ -213,46 +259,7 @@ export default function ProfilePage() {
                 value={measurements.chest}
                 onChange={(e) => setMeasurements({ ...measurements, chest: e.target.value })}
                 className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-espresso mb-1">Trouser Waist</label>
-              <input
-                type="text"
-                value={measurements.waist}
-                onChange={(e) => setMeasurements({ ...measurements, waist: e.target.value })}
-                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-espresso mb-1">Trouser Inseam (Leg Length)</label>
-              <input
-                type="text"
-                value={measurements.inseam}
-                onChange={(e) => setMeasurements({ ...measurements, inseam: e.target.value })}
-                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-espresso mb-1">Shirt Collar Size</label>
-              <input
-                type="text"
-                value={measurements.collar}
-                onChange={(e) => setMeasurements({ ...measurements, collar: e.target.value })}
-                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-espresso mb-1">Shoe Size & Last</label>
-              <input
-                type="text"
-                value={measurements.shoeSize}
-                onChange={(e) => setMeasurements({ ...measurements, shoeSize: e.target.value })}
-                className="w-full bg-ivory px-3.5 py-2.5 rounded-lg border border-burgundy/20 font-medium"
+                placeholder="e.g. 42 in / 106.7 cm"
               />
             </div>
 
@@ -262,7 +269,7 @@ export default function ProfilePage() {
                 className="py-3 px-8 bg-burgundy hover:bg-crimson text-ivory text-xs font-bold uppercase tracking-[0.2em] rounded-lg transition-colors flex items-center gap-2 shadow-md"
               >
                 <Save className="w-4 h-4" />
-                <span>Save Sartorial Measurements</span>
+                <span>Save Silhouette Profile</span>
               </button>
             </div>
           </form>
@@ -323,10 +330,10 @@ export default function ProfilePage() {
 
             <div className="p-5 bg-burgundy/30 rounded-xl border border-gold/20 space-y-2">
               <h4 className="font-bold text-gold uppercase tracking-wider">
-                Savile Row Master Alterations
+                Lifetime Seam & Hardware Care
               </h4>
               <p className="text-ivory/80 leading-relaxed">
-                Zero alteration fees on all suits, blazers, and trousers with dedicated concierge dispatch.
+                Zero repair fees for zipper replacement, selvedge denim chain-stitch hemming, and structural seam reinforcement.
               </p>
             </div>
 
@@ -335,7 +342,7 @@ export default function ProfilePage() {
                 Direct Atelier Stylist Access
               </h4>
               <p className="text-ivory/80 leading-relaxed">
-                Direct WhatsApp and video consultation with our head pattern maker for customized fittings.
+                Direct WhatsApp and video consultation with our head pattern maker for personalized silhouette recommendations.
               </p>
             </div>
           </div>

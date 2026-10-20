@@ -7,8 +7,8 @@ interface AdminAuthContextType {
   isAuthenticated: boolean;
   adminEmail: string | null;
   adminName: string;
-  login: (id: string, pass: string) => { success: boolean; message: string };
-  logout: () => void;
+  login: (id: string, pass: string) => Promise<{ success: boolean; message: string }>;
+  logout: () => Promise<void>;
   accessRegister: AdminAccessRecord[];
   updateAccessRecord: (record: AdminAccessRecord) => void;
   addAccessRecord: (record: Omit<AdminAccessRecord, "adminId">) => void;
@@ -98,25 +98,37 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [accessRegister, setAccessRegister] = useState<AdminAccessRecord[]>(INITIAL_ACCESS_REGISTER);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
+  // Synchronize authentication status with server-side HTTP-only session cookie
   useEffect(() => {
-    try {
-      const session = localStorage.getItem("ts_admin_auth");
-      if (session) {
-        const parsed = JSON.parse(session);
-        if (parsed.authenticated && parsed.email) {
-          setIsAuthenticated(true);
-          setAdminEmail(parsed.email);
+    const checkServerSession = async () => {
+      try {
+        const res = await fetch("/api/auth/session");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.email) {
+            setIsAuthenticated(true);
+            setAdminEmail(data.email);
+          } else {
+            setIsAuthenticated(false);
+            setAdminEmail(null);
+          }
         }
+      } catch (err) {
+        console.error("Session verification error:", err);
+      } finally {
+        setIsHydrated(true);
       }
+    };
 
+    checkServerSession();
+
+    try {
       const storedRegister = localStorage.getItem("ts_access_register");
       if (storedRegister) {
         setAccessRegister(JSON.parse(storedRegister));
       }
     } catch (e) {
-      console.error("Failed to load admin auth:", e);
-    } finally {
-      setIsHydrated(true);
+      console.error("Failed to load access register:", e);
     }
   }, []);
 
@@ -129,30 +141,49 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   }, [accessRegister, isHydrated]);
 
-  const login = (id: string, pass: string): { success: boolean; message: string } => {
-    const trimmedId = id.trim().toLowerCase();
-    const trimmedPass = pass.trim();
+  // Server-authoritative login via /api/auth/login
+  const login = async (id: string, pass: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: id, password: pass }),
+      });
 
-    // User specified credentials:
-    // admin panel id: sujal@.com
-    // password: radhasolanki
-    if (trimmedId === "sujal@.com" && trimmedPass === "radhasolanki") {
-      setIsAuthenticated(true);
-      setAdminEmail(trimmedId);
-      localStorage.setItem(
-        "ts_admin_auth",
-        JSON.stringify({ authenticated: true, email: trimmedId, timestamp: Date.now() })
-      );
-      return { success: true, message: "Welcome back, Sujal Solanki. Authentication successful." };
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setIsAuthenticated(true);
+        setAdminEmail(data.email);
+        return {
+          success: true,
+          message: data.message || "Authentication successful.",
+        };
+      }
+
+      return {
+        success: false,
+        message: data.message || "Invalid administrative credentials.",
+      };
+    } catch (error) {
+      console.error("Login submission error:", error);
+      return {
+        success: false,
+        message: "Authentication service currently unreachable.",
+      };
     }
-
-    return { success: false, message: "Invalid credentials. Please verify your Admin ID and Password." };
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setAdminEmail(null);
-    localStorage.removeItem("ts_admin_auth");
+  // Server-authoritative logout clearing HTTP-only cookie
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (err) {
+      console.error("Logout request error:", err);
+    } finally {
+      setIsAuthenticated(false);
+      setAdminEmail(null);
+    }
   };
 
   const updateAccessRecord = (record: AdminAccessRecord) => {

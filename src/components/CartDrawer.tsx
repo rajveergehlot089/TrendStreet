@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { formatPrice } from "@/lib/pricing";
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -20,7 +21,7 @@ export const CartDrawer: React.FC = () => {
 
   if (!isCartOpen) return null;
 
-  const freeShippingThreshold = 200;
+  const freeShippingThreshold = 1999;
   const progressToFreeShipping = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
 
@@ -32,7 +33,7 @@ export const CartDrawer: React.FC = () => {
         className="absolute inset-0 bg-espresso/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-300"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-ivory shadow-2xl flex flex-col border-l border-burgundy/20 animate-in slide-in-from-right duration-300">
           {/* Drawer Header */}
           <div className="p-6 border-b border-burgundy/15 flex items-center justify-between bg-white">
@@ -55,7 +56,7 @@ export const CartDrawer: React.FC = () => {
           <div className="p-4 bg-ivory-dark border-b border-burgundy/10 text-xs">
             {remainingForFreeShipping > 0 ? (
               <p className="text-espresso/80 font-medium mb-1.5">
-                Add <span className="font-bold text-burgundy">${remainingForFreeShipping.toFixed(2)}</span> more to unlock complimentary VIP courier shipping.
+                Add <span className="font-bold text-burgundy">{formatPrice(remainingForFreeShipping)}</span> more to unlock complimentary VIP courier shipping.
               </p>
             ) : (
               <p className="text-green-800 font-bold flex items-center gap-1.5 mb-1.5">
@@ -81,7 +82,7 @@ export const CartDrawer: React.FC = () => {
                   Your Sartorial Bag is Empty
                 </h3>
                 <p className="text-xs text-espresso/60 max-w-xs mb-6">
-                  Discover our bespoke tailoring, noble cashmere overcoats, and handcrafted footwear.
+                  Discover our architectural oversized hoodies, bootcut selvedge denim, boxy knitwear, and flight jackets.
                 </p>
                 <Link
                   href="/shop"
@@ -159,7 +160,7 @@ export const CartDrawer: React.FC = () => {
                       </div>
 
                       <span className="text-sm font-bold text-burgundy">
-                        ${(item.product.price * item.quantity).toLocaleString()}
+                        {formatPrice(item.product.price * item.quantity)}
                       </span>
                     </div>
                   </div>
@@ -174,21 +175,21 @@ export const CartDrawer: React.FC = () => {
               <div className="space-y-1.5 text-xs text-espresso/70">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-espresso">${cartSubtotal.toLocaleString()}</span>
+                  <span className="font-semibold text-espresso">{formatPrice(cartSubtotal)}</span>
                 </div>
                 {cartDiscount > 0 && (
                   <div className="flex justify-between text-crimson font-medium">
                     <span>VIP Privilege Discount</span>
-                    <span>-${cartDiscount.toLocaleString()}</span>
+                    <span>-{formatPrice(cartDiscount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span>VIP Courier Shipping</span>
-                  <span>{cartShipping === 0 ? "Complimentary" : `$${cartShipping}`}</span>
+                  <span>{cartShipping === 0 ? "Complimentary" : formatPrice(cartShipping)}</span>
                 </div>
                 <div className="pt-2 border-t border-ivory-dark flex justify-between text-base font-bold text-burgundy">
                   <span>Estimated Total</span>
-                  <span>${cartTotal.toLocaleString()}</span>
+                  <span>{formatPrice(cartTotal)}</span>
                 </div>
               </div>
 

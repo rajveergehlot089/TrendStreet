@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { X, Heart, Star, ShoppingBag, ArrowRight, Check, Shield, Sparkles } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { formatPrice } from "@/lib/pricing";
 
 export const QuickViewModal: React.FC = () => {
   const { quickViewProduct, setQuickViewProduct, addToCart, toggleWishlist, isInWishlist } = useStore();
@@ -95,11 +96,11 @@ export const QuickViewModal: React.FC = () => {
 
                 <div className="mt-4 flex items-baseline space-x-3">
                   <span className="text-2xl font-bold text-burgundy">
-                    ${product.price.toLocaleString()}
+                    {formatPrice(product.price)}
                   </span>
                   {product.originalPrice && (
                     <span className="text-sm text-espresso/40 line-through">
-                      ${product.originalPrice.toLocaleString()}
+                      {formatPrice(product.originalPrice)}
                     </span>
                   )}
                 </div>

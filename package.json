@@ -7,13 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsc tests/unit/*.test.ts src/lib/pricing.ts src/lib/auth.ts src/lib/pincode.ts src/lib/razorpay.ts src/lib/email.ts --outDir .test-dist --module commonjs --target es2020 --esModuleInterop --skipLibCheck && node --test .test-dist/tests/unit/*.test.js",
+    "test:integrations": "tsx scripts/test-integrations.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.17",
     "lucide-react": "^0.454.0",
     "next": "14.2.15",
+    "razorpay": "^2.9.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^2.5.4",
@@ -28,7 +32,9 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.15",
     "postcss": "^8.4.47",
+    "prisma": "^6.19.3",
     "tailwindcss": "^3.4.14",
+    "tsx": "^4.23.15",
     "typescript": "^5.6.3"
   }
 }

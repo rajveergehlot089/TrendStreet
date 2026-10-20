@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { QuickViewModal } from "@/components/QuickViewModal";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { StoreJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
@@ -31,9 +32,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://trendstreet.com"),
   other: {
     "geo.region": "GB-LND",
-    "geo.placename": "London, Mayfair",
-    "geo.position": "51.5113;-0.1415",
-    "ICBM": "51.5113, -0.1415",
+    "geo.placename": "London, Shoreditch",
+    "geo.position": "51.5238;-0.0768",
+    "ICBM": "51.5238, -0.0768",
   },
   openGraph: {
     type: "website",
@@ -81,6 +82,7 @@ export default function RootLayout({
             <Footer />
             <CartDrawer />
             <QuickViewModal />
+            <MobileBottomNav />
           </StoreProvider>
         </AdminAuthProvider>
       </body>

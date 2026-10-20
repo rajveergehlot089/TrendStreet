@@ -21,15 +21,15 @@ export const StoreJsonLd: React.FC = () => {
     paymentAccepted: "Credit Card, Debit Card, Apple Pay, Google Pay, UPI",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "14 Savile Row, Mayfair",
+      streetAddress: "72 Shoreditch High Street, Hackney",
       addressLocality: "London",
-      postalCode: "W1S 3JN",
+      postalCode: "E1 6JJ",
       addressCountry: "GB",
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: "51.5113",
-      longitude: "-0.1415",
+      latitude: "51.5238",
+      longitude: "-0.0768",
     },
     contactPoint: {
       "@type": "ContactPoint",

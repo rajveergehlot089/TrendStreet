@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { formatPrice } from "@/lib/pricing";
 
 export default function BagPage() {
   const {
@@ -44,7 +45,7 @@ export default function BagPage() {
     if (res.success) setInputCode("");
   };
 
-  const freeShippingThreshold = 200;
+  const freeShippingThreshold = 1999;
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
 
   return (
@@ -78,7 +79,7 @@ export default function BagPage() {
             Your Sartorial Bag is Empty
           </h2>
           <p className="text-xs text-espresso/70 max-w-md mx-auto leading-relaxed">
-            Explore our curated collections of Savile Row peak lapel tuxedos, Mongolian double-faced cashmere overcoats, and handcrafted footwear.
+            Explore our architectural silhouettes: heavyweight oversized hoodies, 14.5oz Okayama selvedge bootcut denim, structured boxy tees, and artisanal flight jackets.
           </p>
           <Link
             href="/shop"
@@ -98,12 +99,12 @@ export default function BagPage() {
                 <Sparkles className="w-4 h-4 text-gold flex-shrink-0" />
                 <span>
                   {remainingForFreeShipping > 0
-                    ? `Add $${remainingForFreeShipping.toFixed(2)} more for complimentary express courier dispatch.`
+                    ? `Add ${formatPrice(remainingForFreeShipping)} more for complimentary express courier dispatch.`
                     : "You have qualified for complimentary express VIP courier delivery."}
                 </span>
               </div>
               <span className="font-bold text-burgundy">
-                {cartShipping === 0 ? "FREE" : "$25"}
+                {cartShipping === 0 ? "FREE" : formatPrice(cartShipping)}
               </span>
             </div>
 
@@ -133,7 +134,7 @@ export default function BagPage() {
                       </div>
 
                       <span className="text-base font-bold text-burgundy">
-                        ${(item.product.price * item.quantity).toLocaleString()}
+                        {formatPrice(item.product.price * item.quantity)}
                       </span>
                     </div>
 
@@ -142,7 +143,7 @@ export default function BagPage() {
                       <span>•</span>
                       <span>Color: <strong className="text-espresso">{item.selectedColor}</strong></span>
                       <span>•</span>
-                      <span>Unit Price: ${item.product.price.toLocaleString()}</span>
+                      <span>Unit Price: {formatPrice(item.product.price)}</span>
                     </div>
 
                     <div className="flex items-center justify-between pt-3">
@@ -230,7 +231,7 @@ export default function BagPage() {
                     <Tag className="absolute left-3 top-2.5 w-3.5 h-3.5 text-espresso/40" />
                     <input
                       type="text"
-                      placeholder="Try 'TREND10' or 'VIP20'"
+                      placeholder="Try 'TREND10' or 'STREET20'"
                       value={inputCode}
                       onChange={(e) => setInputCode(e.target.value)}
                       className="w-full bg-ivory pl-8 pr-2 py-2 text-xs rounded border border-burgundy/20 text-espresso uppercase placeholder-espresso/40 focus:outline-none focus:border-burgundy"
@@ -268,29 +269,29 @@ export default function BagPage() {
               <div className="space-y-2 text-xs text-espresso/80 pt-2 border-t border-ivory-dark">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-espresso">${cartSubtotal.toLocaleString()}</span>
+                  <span className="font-semibold text-espresso">{formatPrice(cartSubtotal)}</span>
                 </div>
 
                 {cartDiscount > 0 && (
                   <div className="flex justify-between text-crimson font-medium">
                     <span>Privilege Discount</span>
-                    <span>-${cartDiscount.toLocaleString()}</span>
+                    <span>-{formatPrice(cartDiscount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between">
                   <span>VIP Courier Dispatch</span>
-                  <span>{cartShipping === 0 ? "Complimentary" : `$${cartShipping}`}</span>
+                  <span>{cartShipping === 0 ? "Complimentary" : formatPrice(cartShipping)}</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span>Estimated Tax (8%)</span>
-                  <span>${cartTax.toLocaleString()}</span>
+                  <span>GST (12% Included)</span>
+                  <span>{formatPrice(cartTax)}</span>
                 </div>
 
                 <div className="pt-3 border-t border-burgundy/15 flex justify-between text-lg font-bold text-burgundy">
                   <span>Total Investment</span>
-                  <span>${cartTotal.toLocaleString()}</span>
+                  <span>{formatPrice(cartTotal)}</span>
                 </div>
               </div>
 
@@ -308,7 +309,7 @@ export default function BagPage() {
                   <span>256-Bit SSL Encrypted Checkout</span>
                 </div>
                 <p>
-                  Prices shown include all applicable import tariffs and carbon-neutral express handling.
+                  Prices shown are inclusive of all statutory Indian taxes (12% GST) and express doorstep delivery.
                 </p>
               </div>
             </div>

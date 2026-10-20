@@ -110,18 +110,18 @@ function ShopContent() {
     inStockOnly;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-10 space-y-6 sm:space-y-8">
       {/* Page Header */}
-      <div className="pb-6 border-b border-burgundy/15 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="pb-4 sm:pb-6 border-b border-burgundy/15 flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
-            Complete Sartorial Catalog
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
+            Complete Streetwear Catalog
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
-            {selectedCategory === "All" ? "The Menswear Collection" : selectedCategory}
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-espresso">
+            {selectedCategory === "All" ? "The Core Collection" : selectedCategory}
           </h1>
-          <p className="text-xs text-espresso/70 mt-1">
-            Showing {filteredProducts.length} pieces of bespoke Savile Row tailoring & noble casual luxury.
+          <p className="text-[11px] sm:text-xs text-espresso/70 mt-1">
+            Showing {filteredProducts.length} pieces of oversized drops, selvedge denim, boxy cuts & outerwear.
           </p>
         </div>
 
@@ -250,7 +250,7 @@ function ShopContent() {
           {/* Size Pills */}
           <div className="space-y-2.5 pt-4 border-t border-burgundy/10">
             <label className="text-xs font-semibold text-espresso uppercase tracking-wider block">
-              Tailoring & Shoe Size
+              Silhouette Size
             </label>
             <div className="flex flex-wrap gap-1.5">
               <button
@@ -311,7 +311,7 @@ function ShopContent() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-6">
               {filteredProducts.map((prod) => (
                 <ProductCard key={prod.id} product={prod} />
               ))}

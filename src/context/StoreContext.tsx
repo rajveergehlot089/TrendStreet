@@ -1,11 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Product, CartItem, Order, UserProfile, OrderStatus } from "@/types/store";
+import { Product, CartItem, Order, UserProfile, OrderStatus, SiteSettings } from "@/types/store";
 import { INITIAL_PRODUCTS } from "@/data/products";
 
 interface StoreContextType {
   products: Product[];
+  siteSettings: SiteSettings;
+  updateSiteSettings: (settings: Partial<SiteSettings>) => void;
+  resetSiteSettings: () => void;
   cart: CartItem[];
   wishlist: string[];
   orders: Order[];
@@ -39,39 +42,91 @@ interface StoreContextType {
 }
 
 const DEFAULT_USER: UserProfile = {
-  name: "Julian Sterling",
-  email: "julian.sterling@mayfair.co.uk",
-  phone: "+44 20 7946 0912",
+  name: "Aarav Sharma",
+  email: "aarav.sharma@trendstreet.in",
+  phone: "+91 98200 12345",
   vipTier: "Burgundy Connoisseur (VIP Tier 1)",
   rewardPoints: 2450,
   savedAddresses: [
     {
       id: "addr-1",
-      label: "Savile Row Residence",
-      fullName: "Julian Sterling",
-      address: "14 Savile Row, Mayfair",
-      city: "London",
-      postalCode: "W1S 3JN",
+      label: "Mumbai Residence",
+      fullName: "Aarav Sharma",
+      address: "Flat 402, Sea Green Apartments, Bandra West",
+      city: "Mumbai",
+      postalCode: "400050",
       isDefault: true,
     },
     {
       id: "addr-2",
-      label: "Milan Pied-à-terre",
-      fullName: "Julian Sterling",
-      address: "Via Montenapoleone 8",
-      city: "Milan",
-      postalCode: "20121",
+      label: "Bengaluru Loft",
+      fullName: "Aarav Sharma",
+      address: "Villa 12, 12th Main, Indiranagar",
+      city: "Bengaluru",
+      postalCode: "560038",
       isDefault: false,
     },
   ],
   measurements: {
-    jacketSize: "40R",
-    chest: "40 inches / 101.6 cm",
-    waist: "33 inches / 83.8 cm",
-    inseam: "32 inches / 81.2 cm",
-    collar: "15.5 inches / 39.5 cm",
-    sleeve: "34 inches / 86.4 cm",
-    shoeSize: "UK 9 / US 10 / EU 43",
+    oversizedFit: "L (Relaxed Architectural)",
+    boxyFit: "M (Structured Box Crop)",
+    jacketSize: "L (Layered Flight Cut)",
+    denimWaist: "32W",
+    denimLength: "32L",
+    chest: "42 in / 106.7 cm",
+  },
+};
+
+export const DEFAULT_SITE_SETTINGS: SiteSettings = {
+  storeName: "Trend Street",
+  storeTagline: "The Style Hub",
+  topAnnouncement: {
+    enabled: true,
+    text: "Autumn / Winter 2026 Drops Live • Complimentary Express Courier Across India on Orders Above ₹1,999 • All-Inclusive GST",
+    linkUrl: "/shop",
+    linkText: "Explore Now",
+  },
+  hero: {
+    badgeText: "Autumn / Winter 2026 Drops",
+    titleLine1: "Oversized Silhouettes.",
+    titleLine2: "Modern Distinction.",
+    subtitle:
+      "Trend Street redefines contemporary Indian menswear through heavyweight drape, architectural boxy fits, Okayama selvedge denim jeans, and handcrafted flight jackets.",
+    primaryBtnText: "Explore The Drops",
+    primaryBtnLink: "/shop",
+    secondaryBtnText: "View Lookbook",
+    secondaryBtnLink: "/lookbook",
+    stat1Value: "520gsm",
+    stat1Label: "Heavyweight Loopback",
+    stat2Value: "14.5oz",
+    stat2Label: "Okayama Selvedge Denim",
+    stat3Value: "Boxy Cut",
+    stat3Label: "Dropped-Shoulder Geometry",
+  },
+  marqueePhrases: [
+    "HEAVYWEIGHT OVERSIZED HOODIES",
+    "14.5OZ OKAYAMA REDLINE SELVEDGE JEANS",
+    "BOXY FIT CROPPED GEOMETRY",
+    "TUSCAN SUEDE & FLIGHT JACKETS",
+    "COMPLIMENTARY EXPRESS COURIER ACROSS INDIA",
+    "520GSM JAPANESE FRENCH LOOPBACK TERRY",
+  ],
+  categoryTaglines: {
+    Oversized: "520gsm Loopback & Combed Cotton",
+    Jeans: "14.5oz Okayama Shuttle Looms",
+    "Boxy Fit": "Structured Minimalist Geometry",
+    Jackets: "Tuscan Suede & Duck Canvas",
+  },
+  promoCodes: [
+    { code: "TREND10", discountPercent: 10, description: "Inaugural Offer: 10% off on orders above ₹1,999." },
+    { code: "STREET20", discountPercent: 20, description: "Seasonal Drop: 20% off on orders above ₹3,999." },
+    { code: "FREESHIP", discountPercent: 0, description: "Complimentary priority courier delivery across India." },
+  ],
+  contactInfo: {
+    email: "concierge@trendstreet.in",
+    phone: "+91 98200 12345",
+    address: "Atelier 4, Pali Hill Road, Bandra West, Mumbai 400050, India",
+    hours: "Monday – Saturday: 10:00 AM – 8:00 PM IST",
   },
 };
 
@@ -84,41 +139,41 @@ const INITIAL_ORDERS: Order[] = [
     items: [
       {
         productId: "ts-001",
-        productName: "The Mayfair Peak Lapel Tuxedo",
-        price: 1450,
-        selectedSize: "40R",
-        selectedColor: "Midnight Black",
+        productName: "The Mayfair Heavyweight Oversized Tee",
+        price: 2499,
+        selectedSize: "L",
+        selectedColor: "Deep Burgundy",
         quantity: 1,
-        image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop",
       },
       {
-        productId: "ts-010",
-        productName: "Mulberry Silk & Wool Pocket Square",
-        price: 120,
-        selectedSize: "One Size",
-        selectedColor: "Burgundy & Gold Medallion",
+        productId: "ts-004",
+        productName: "The Shibuya Relaxed Carpenter Jeans",
+        price: 5499,
+        selectedSize: "32",
+        selectedColor: "Washed Vintage Blue",
         quantity: 1,
-        image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=800&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop",
       },
     ],
-    subtotal: 1570,
-    discount: 157,
+    subtotal: 7998,
+    discount: 799.8,
     shipping: 0,
-    tax: 113.04,
-    total: 1526.04,
+    tax: 0,
+    total: 7198.2,
     promoCode: "TREND10",
     customer: {
-      fullName: "Julian Sterling",
-      email: "julian.sterling@mayfair.co.uk",
-      phone: "+44 20 7946 0912",
-      address: "14 Savile Row, Mayfair",
-      city: "London",
-      postalCode: "W1S 3JN",
-      country: "United Kingdom",
+      fullName: "Aarav Sharma",
+      email: "aarav.sharma@trendstreet.in",
+      phone: "+91 98200 12345",
+      address: "Flat 402, Sea Green Apartments, Bandra West",
+      city: "Mumbai",
+      postalCode: "400050",
+      country: "India",
     },
     deliveryMethod: "vip_courier",
-    paymentMethod: "card",
-    trackingNumber: "TS-VIP-994821-GB",
+    paymentMethod: "upi",
+    trackingNumber: "DELHIVERY-AWB-9948210IN",
     estimatedDelivery: "2026-10-16",
   },
   {
@@ -128,33 +183,33 @@ const INITIAL_ORDERS: Order[] = [
     status: "In Transit",
     items: [
       {
-        productId: "ts-004",
-        productName: "Tuscan Suede Flight Bomber",
-        price: 1250,
+        productId: "ts-010",
+        productName: "The Tuscan Suede MA-1 Flight Jacket",
+        price: 8999,
         selectedSize: "L",
         selectedColor: "Deep Burgundy",
         quantity: 1,
         image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop",
       },
     ],
-    subtotal: 1250,
+    subtotal: 8999,
     discount: 0,
     shipping: 0,
-    tax: 100,
-    total: 1350,
+    tax: 0,
+    total: 8999,
     customer: {
-      fullName: "Julian Sterling",
-      email: "julian.sterling@mayfair.co.uk",
-      phone: "+44 20 7946 0912",
-      address: "14 Savile Row, Mayfair",
-      city: "London",
-      postalCode: "W1S 3JN",
-      country: "United Kingdom",
+      fullName: "Aarav Sharma",
+      email: "aarav.sharma@trendstreet.in",
+      phone: "+91 98200 12345",
+      address: "Flat 402, Sea Green Apartments, Bandra West",
+      city: "Mumbai",
+      postalCode: "400050",
+      country: "India",
     },
     deliveryMethod: "vip_courier",
     paymentMethod: "card",
-    trackingNumber: "TS-EXP-773190-GB",
-    estimatedDelivery: "2026-10-20",
+    trackingNumber: "BLUEDART-EXP-773190IN",
+    estimatedDelivery: "2026-10-21",
   },
 ];
 
@@ -162,6 +217,7 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>(["ts-001", "ts-003", "ts-008"]);
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
@@ -175,6 +231,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Hydrate from localStorage safely on mount
   useEffect(() => {
     try {
+      const storedSettings = localStorage.getItem("ts_site_settings");
+      if (storedSettings) {
+        setSiteSettings(JSON.parse(storedSettings));
+      }
+
       const storedProducts = localStorage.getItem("ts_products");
       if (storedProducts) {
         const parsed = JSON.parse(storedProducts);
@@ -213,6 +274,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     if (!isHydrated) return;
     try {
+      localStorage.setItem("ts_site_settings", JSON.stringify(siteSettings));
       localStorage.setItem("ts_products", JSON.stringify(products));
       localStorage.setItem("ts_cart", JSON.stringify(cart));
       localStorage.setItem("ts_wishlist", JSON.stringify(wishlist));
@@ -221,7 +283,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch (e) {
       console.error("Failed to persist state:", e);
     }
-  }, [products, cart, wishlist, orders, user, isHydrated]);
+  }, [siteSettings, products, cart, wishlist, orders, user, isHydrated]);
 
   const addToCart = (product: Product, size: string, color: string, quantity = 1) => {
     setCart((prevCart) => {
@@ -282,22 +344,28 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const applyPromoCode = (code: string): { success: boolean; message: string } => {
     const cleanCode = code.trim().toUpperCase();
-    if (cleanCode === "TREND10") {
-      setPromoCode("TREND10");
-      setDiscountRate(0.1);
-      return { success: true, message: "VIP Privilege: 10% discount applied." };
+    const found = siteSettings.promoCodes.find((p) => p.code.toUpperCase() === cleanCode);
+    if (found) {
+      setPromoCode(found.code);
+      setDiscountRate(found.discountPercent / 100);
+      return { success: true, message: `${found.description} (${found.discountPercent}% off applied)` };
     }
-    if (cleanCode === "VIP20") {
-      setPromoCode("VIP20");
-      setDiscountRate(0.2);
-      return { success: true, message: "Bespoke Connoisseur: 20% discount applied." };
-    }
-    if (cleanCode === "FREESHIP") {
-      setPromoCode("FREESHIP");
-      setDiscountRate(0.05);
-      return { success: true, message: "Complimentary VIP courier & 5% courtesy discount applied." };
-    }
-    return { success: false, message: "Invalid promo code. Try 'TREND10' or 'VIP20'." };
+    return { success: false, message: "Invalid promo code. Please check your spelling or contact concierge." };
+  };
+
+  const updateSiteSettings = (newSettings: Partial<SiteSettings>) => {
+    setSiteSettings((prev) => ({
+      ...prev,
+      ...newSettings,
+      hero: { ...prev.hero, ...(newSettings.hero || {}) },
+      topAnnouncement: { ...prev.topAnnouncement, ...(newSettings.topAnnouncement || {}) },
+      contactInfo: { ...prev.contactInfo, ...(newSettings.contactInfo || {}) },
+      categoryTaglines: { ...prev.categoryTaglines, ...(newSettings.categoryTaglines || {}) },
+    }));
+  };
+
+  const resetSiteSettings = () => {
+    setSiteSettings(DEFAULT_SITE_SETTINGS);
   };
 
   const removePromoCode = () => {
@@ -347,7 +415,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           rating: 5,
           date: new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
           title: "Craftsmanship Certified",
-          comment: "Inspected and approved by Master Tailors.",
+          comment: "Inspected and certified by Trend Street Atelier.",
           verified: true,
         },
       ],
@@ -383,6 +451,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <StoreContext.Provider
       value={{
         products,
+        siteSettings,
+        updateSiteSettings,
+        resetSiteSettings,
         cart,
         wishlist,
         orders,

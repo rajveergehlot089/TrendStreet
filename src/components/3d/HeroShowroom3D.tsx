@@ -56,6 +56,17 @@ export const HeroShowroom3D: React.FC = () => {
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [isSupported, setIsSupported] = useState<boolean>(true);
 
+  const isRotatingRef = useRef(isRotating);
+  useEffect(() => {
+    isRotatingRef.current = isRotating;
+  }, [isRotating]);
+
+  const activeSwatchRef = useRef(activeSwatch);
+  useEffect(() => {
+    activeSwatchRef.current = activeSwatch;
+    updateFabricRef.current?.(activeSwatch);
+  }, [activeSwatch]);
+
   useEffect(() => {
     if (!mountRef.current) return;
     const container = mountRef.current;
@@ -115,11 +126,12 @@ export const HeroShowroom3D: React.FC = () => {
     scene.add(group);
 
     // Torso / Mannequin Body
+    const initialSwatch = activeSwatchRef.current;
     const torsoGeometry = new THREE.CylinderGeometry(0.7, 0.5, 2.0, 32, 32);
     const torsoMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(activeSwatch.color),
-      roughness: activeSwatch.roughness,
-      metalness: activeSwatch.metalness,
+      color: new THREE.Color(initialSwatch.color),
+      roughness: initialSwatch.roughness,
+      metalness: initialSwatch.metalness,
     });
     const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
     torsoMesh.position.y = 0.2;
@@ -131,10 +143,10 @@ export const HeroShowroom3D: React.FC = () => {
     shoulderMesh.position.y = 1.1;
     group.add(shoulderMesh);
 
-    // Peak Lapels (Architectural Tailoring details)
+    // Collar & Lapels (Architectural Silhouette details)
     const lapelLeftGeo = new THREE.ConeGeometry(0.35, 1.2, 4);
     const lapelMat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(activeSwatch.specular),
+      color: new THREE.Color(initialSwatch.specular),
       roughness: 0.5,
       metalness: 0.2,
     });
@@ -163,9 +175,9 @@ export const HeroShowroom3D: React.FC = () => {
     // Interactive Cloth Swatch Cloth Plane (Waving fabric drape)
     const clothGeo = new THREE.PlaneGeometry(1.8, 1.4, 28, 28);
     const clothMat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(activeSwatch.color),
-      roughness: activeSwatch.roughness,
-      metalness: activeSwatch.metalness,
+      color: new THREE.Color(initialSwatch.color),
+      roughness: initialSwatch.roughness,
+      metalness: initialSwatch.metalness,
       side: THREE.DoubleSide,
     });
     const clothMesh = new THREE.Mesh(clothGeo, clothMat);
@@ -242,7 +254,7 @@ export const HeroShowroom3D: React.FC = () => {
       const elapsedTime = clock.getElapsedTime();
 
       // Slow elegant auto-rotation when user is not manually dragging
-      if (isRotating && !isDragging) {
+      if (isRotatingRef.current && !isDragging) {
         group.rotation.y += 0.004;
       }
 
@@ -323,11 +335,6 @@ export const HeroShowroom3D: React.FC = () => {
       updateFabricRef.current = null;
     };
   }, []);
-
-  // Update fabric when activeSwatch changes
-  useEffect(() => {
-    updateFabricRef.current?.(activeSwatch);
-  }, [activeSwatch]);
 
   return (
     <div className="relative w-full h-[480px] sm:h-[560px] lg:h-[640px] bg-gradient-to-b from-ivory via-ivory-dark to-ivory rounded-2xl overflow-hidden border border-burgundy/15 shadow-2xl flex items-center justify-center">

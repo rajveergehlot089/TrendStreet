@@ -15,6 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { formatPrice } from "@/lib/pricing";
 
 export default function OrderConfirmationPage() {
   const { orderId } = useParams();
@@ -30,7 +31,7 @@ export default function OrderConfirmationPage() {
         </div>
         <h1 className="font-serif text-3xl font-bold text-espresso">Order Record Not Found</h1>
         <p className="text-espresso/70 text-sm max-w-md mx-auto">
-          We could not locate an active order associated with this reference. If you recently placed an order, please review your client profile or contact our Mayfair concierge.
+          We could not locate an active order associated with this reference. If you recently placed an order, please review your client profile or contact our studio concierge.
         </p>
         <div className="flex items-center justify-center gap-4 pt-2">
           <Link
@@ -64,7 +65,7 @@ export default function OrderConfirmationPage() {
           Thank You, {order.customer.fullName}
         </h1>
         <p className="text-xs text-espresso/70 max-w-md mx-auto leading-relaxed">
-          Your sartorial allocation has been registered with our Mayfair Atelier. A master tailor is inspecting your garments prior to courier dispatch.
+          Your garment allocation has been registered with our Bandra West Atelier in Mumbai. Our master craftsmen are inspecting fabric handfeel and hardware prior to express courier dispatch.
         </p>
 
         <div className="pt-4 flex flex-wrap items-center justify-center gap-3 text-xs">
@@ -133,7 +134,7 @@ export default function OrderConfirmationPage() {
               </div>
 
               <span className="text-sm font-bold text-burgundy">
-                ${(item.price * item.quantity).toLocaleString()}
+                {formatPrice(item.price * item.quantity)}
               </span>
             </div>
           ))}
@@ -143,25 +144,25 @@ export default function OrderConfirmationPage() {
         <div className="pt-4 border-t border-burgundy/15 space-y-2 text-xs text-espresso/80">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>${order.subtotal.toLocaleString()}</span>
+            <span>{formatPrice(order.subtotal)}</span>
           </div>
           {order.discount > 0 && (
             <div className="flex justify-between text-crimson font-medium">
               <span>Privilege Discount ({order.promoCode})</span>
-              <span>-${order.discount.toLocaleString()}</span>
+              <span>-{formatPrice(order.discount)}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span>VIP Courier Courier</span>
-            <span>{order.shipping === 0 ? "Complimentary" : `$${order.shipping}`}</span>
+            <span>Courier Logistics</span>
+            <span>{order.shipping === 0 ? "Complimentary" : formatPrice(order.shipping)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Applicable Taxes & Duties</span>
-            <span>${order.tax.toLocaleString()}</span>
+            <span>GST (12% Statutory Tax)</span>
+            <span>{formatPrice(order.tax)}</span>
           </div>
           <div className="pt-3 border-t border-ivory-dark flex justify-between text-base font-bold text-burgundy">
             <span>Total Settled</span>
-            <span>${order.total.toLocaleString()}</span>
+            <span>{formatPrice(order.total)}</span>
           </div>
         </div>
       </div>

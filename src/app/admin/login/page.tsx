@@ -23,20 +23,18 @@ export default function AdminLoginPage() {
     }
   }, [isAuthenticated, router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    setTimeout(() => {
-      const res = login(adminId, password);
-      if (res.success) {
-        router.push("/admin");
-      } else {
-        setError(res.message);
-        setLoading(false);
-      }
-    }, 600);
+    const res = await login(adminId, password);
+    if (res.success) {
+      router.push("/admin");
+    } else {
+      setError(res.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -130,25 +128,6 @@ export default function AdminLoginPage() {
               )}
             </button>
           </form>
-
-          {/* Credentials Helper Callout */}
-          <div className="p-3.5 bg-burgundy/10 border border-burgundy/20 rounded-xl text-[11px] text-espresso/80 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-burgundy block">Configured Credentials:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setAdminId("sujal@.com");
-                  setPassword("radhasolanki");
-                }}
-                className="text-[10px] text-burgundy underline hover:text-crimson font-medium"
-              >
-                Auto-fill
-              </button>
-            </div>
-            <p>Admin ID: <strong className="font-mono text-espresso">sujal@.com</strong></p>
-            <p>Password: <strong className="font-mono text-espresso">radhasolanki</strong></p>
-          </div>
         </div>
 
         {/* Back to store */}

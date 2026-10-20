@@ -98,17 +98,17 @@ export interface UserProfile {
     fullName: string;
     address: string;
     city: string;
+    state?: string;
     postalCode: string;
     isDefault: boolean;
   }[];
   measurements: {
+    oversizedFit: string;
+    boxyFit: string;
     jacketSize: string;
+    denimWaist: string;
+    denimLength: string;
     chest: string;
-    waist: string;
-    inseam: string;
-    collar: string;
-    sleeve: string;
-    shoeSize: string;
   };
 }
 
@@ -135,4 +135,49 @@ export interface AdminAccessRecord {
   riskLevel: "Low" | "Medium" | "High" | "Critical";
   status: "Requested" | "Approved" | "Provisioned" | "Review Due" | "Revoked";
   notes: string;
+}
+
+export interface SiteSettings {
+  storeName: string;
+  storeTagline: string;
+  topAnnouncement: {
+    enabled: boolean;
+    text: string;
+    linkUrl: string;
+    linkText: string;
+  };
+  hero: {
+    badgeText: string;
+    titleLine1: string;
+    titleLine2: string;
+    subtitle: string;
+    primaryBtnText: string;
+    primaryBtnLink: string;
+    secondaryBtnText: string;
+    secondaryBtnLink: string;
+    stat1Value: string;
+    stat1Label: string;
+    stat2Value: string;
+    stat2Label: string;
+    stat3Value: string;
+    stat3Label: string;
+  };
+  marqueePhrases: string[];
+  categoryTaglines: {
+    Oversized: string;
+    Jeans: string;
+    "Boxy Fit": string;
+    Jackets: string;
+  };
+  promoCodes: {
+    code: string;
+    discountPercent: number;
+    description: string;
+  }[];
+  contactInfo: {
+    email: string;
+    phone: string;
+    address: string;
+    hours: string;
+  };
 }

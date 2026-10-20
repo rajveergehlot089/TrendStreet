@@ -42,7 +42,7 @@ export const FlyingWearScrollStrip: React.FC = () => {
 
       {/* Floating Garments Showcase in Parallax Motion */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-        {/* Item 1: Floating Velvet Jacket */}
+        {/* Item 1: Floating Suede Flight Jacket */}
         <motion.div
           style={{ x: xLeft, rotate: rotateLeft }}
           className="relative group p-6 rounded-3xl bg-ivory/5 backdrop-blur-md border border-ivory/10 hover:border-gold/40 transition-all flex flex-col items-center text-center"
@@ -50,7 +50,7 @@ export const FlyingWearScrollStrip: React.FC = () => {
           <div className="relative w-48 h-48 sm:w-56 sm:h-56">
             <motion.img
               src="/flying-wear-jacket.png"
-              alt="Flying Mayfair Velvet Jacket"
+              alt="Flying Tuscan Suede Flight Jacket"
               animate={{
                 y: [0, -12, 0],
                 rotate: [0, 2, -1, 0],
@@ -61,12 +61,12 @@ export const FlyingWearScrollStrip: React.FC = () => {
           </div>
           <div className="mt-4 space-y-1">
             <span className="text-[10px] uppercase tracking-widest text-gold block font-semibold">
-              Mayfair Eveningwear
+              Structural Outerwear
             </span>
             <h4 className="font-serif text-base font-bold text-ivory">
-              Peak Lapel Velvet Jacket
+              Tuscan Suede Flight Jacket
             </h4>
-            <span className="text-xs font-semibold text-ivory/80 block">$1,350</span>
+            <span className="text-xs font-semibold text-ivory/80 block">₹11,999</span>
           </div>
           <Link
             href="/shop?category=Jackets"
@@ -77,7 +77,7 @@ export const FlyingWearScrollStrip: React.FC = () => {
           </Link>
         </motion.div>
 
-        {/* Item 2: Floating Cashmere Overcoat */}
+        {/* Item 2: Floating Oversized Hoodie */}
         <motion.div
           style={{ y: useTransform(scrollYProgress, [0, 1], [30, -30]) }}
           className="relative group p-6 rounded-3xl bg-burgundy/40 backdrop-blur-md border border-burgundy/50 hover:border-gold/40 transition-all flex flex-col items-center text-center shadow-2xl scale-105 z-20"
@@ -88,7 +88,7 @@ export const FlyingWearScrollStrip: React.FC = () => {
           <div className="relative w-56 h-56 sm:w-64 sm:h-64 mt-2">
             <motion.img
               src="/flying-wear-coat.png"
-              alt="Flying Tuscan Cashmere Coat"
+              alt="Flying Tokyo Drop-Shoulder Oversized Hoodie"
               animate={{
                 y: [0, -16, 0],
                 rotate: [0, -2, 2, 0],
@@ -99,12 +99,12 @@ export const FlyingWearScrollStrip: React.FC = () => {
           </div>
           <div className="mt-4 space-y-1">
             <span className="text-[10px] uppercase tracking-widest text-gold block font-semibold">
-              Oversized Silhouette
+              520gsm Loopback Terry
             </span>
             <h4 className="font-serif text-lg font-bold text-ivory">
-              Double-Faced Coat
+              Tokyo Oversized Hoodie
             </h4>
-            <span className="text-sm font-semibold text-gold block">$1,450</span>
+            <span className="text-sm font-semibold text-gold block">₹4,999</span>
           </div>
           <Link
             href="/shop?category=Oversized"
@@ -139,7 +139,7 @@ export const FlyingWearScrollStrip: React.FC = () => {
             <h4 className="font-serif text-base font-bold text-ivory">
               Relaxed Carpenter Denim
             </h4>
-            <span className="text-xs font-semibold text-ivory/80 block">$320</span>
+            <span className="text-xs font-semibold text-ivory/80 block">₹5,499</span>
           </div>
           <Link
             href="/shop?category=Jeans"

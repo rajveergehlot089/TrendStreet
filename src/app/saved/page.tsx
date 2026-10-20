@@ -19,13 +19,13 @@ export default function SavedPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-10">
-      <div className="pb-6 border-b border-burgundy/15 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-10 space-y-6 sm:space-y-10">
+      <div className="pb-4 sm:pb-6 border-b border-burgundy/15 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-crimson block mb-1">
             Your Private Wishlist
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-espresso">
+          <h1 className="font-serif text-2xl sm:text-4xl font-bold text-espresso">
             Saved Pieces ({savedProducts.length})
           </h1>
         </div>
@@ -50,7 +50,7 @@ export default function SavedPage() {
             No Pieces Saved Yet
           </h2>
           <p className="text-xs text-espresso/70 max-w-md mx-auto leading-relaxed">
-            Curate your seasonal wardrobe by tapping the heart icon on any bespoke tuxedo, cashmere overcoat, or handcrafted footwear.
+            Curate your seasonal wardrobe by tapping the heart icon on any oversized hoodie, bootcut selvedge denim, boxy knit, or flight jacket.
           </p>
           <Link
             href="/shop"
@@ -61,7 +61,7 @@ export default function SavedPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-6">
           {savedProducts.map((product) => (
             <div key={product.id} className="relative group">
               <ProductCard product={product} />

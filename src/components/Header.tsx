@@ -19,12 +19,13 @@ import { useStore } from "@/context/StoreContext";
 export const Header: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { cartItemsCount, wishlist, setIsCartOpen } = useStore();
+  const { cartItemsCount, wishlist, setIsCartOpen, siteSettings } = useStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAnnouncementDismissed, setIsAnnouncementDismissed] = useState(false);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -61,16 +62,40 @@ export const Header: React.FC = () => {
 
   return (
     <>
+      {/* Top Announcement Bar (Configurable in Admin Portal) */}
+      {siteSettings?.topAnnouncement?.enabled && !isAnnouncementDismissed && (
+        <div className="bg-espresso text-gold py-1.5 px-3 text-center text-[10px] sm:text-xs font-semibold tracking-wider uppercase border-b border-burgundy/30 select-none relative">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-1.5 flex-wrap pr-6">
+            <span>{siteSettings.topAnnouncement.text}</span>
+            {siteSettings.topAnnouncement.linkUrl && (
+              <Link
+                href={siteSettings.topAnnouncement.linkUrl}
+                className="text-ivory underline hover:text-gold transition-colors font-bold"
+              >
+                {siteSettings.topAnnouncement.linkText || "Explore"}
+              </Link>
+            )}
+          </div>
+          <button
+            onClick={() => setIsAnnouncementDismissed(true)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gold/70 hover:text-gold p-1"
+            aria-label="Dismiss announcement"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* Main Luxury Header */}
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? "bg-ivory/95 backdrop-blur-md shadow-md py-2 border-b border-burgundy/15"
-            : "bg-ivory py-3 sm:py-4 border-b border-burgundy/10"
+            ? "bg-ivory/95 backdrop-blur-md shadow-md py-1.5 sm:py-2 border-b border-burgundy/15"
+            : "bg-ivory py-2 sm:py-4 border-b border-burgundy/10"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between min-h-[58px]">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between min-h-[50px] sm:min-h-[58px]">
             {/* Left Nav (All 4 Sections Grouped Side by Side) / Mobile Toggle */}
             <div className="flex-1 flex items-center justify-start space-x-3 sm:space-x-6">
               <button

@@ -59,7 +59,7 @@ export default function AdminOrdersPage() {
             Customer Allocations ({orders.length})
           </h1>
           <p className="text-xs text-espresso/70 mt-0.5">
-            Track luxury orders, update courier statuses, and inspect bespoke tailoring requirements.
+            Track luxury orders, update courier statuses, and inspect custom hem & silhouette notes.
           </p>
         </div>
 

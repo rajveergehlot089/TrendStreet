@@ -1,0 +1,333 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  ATELIER_STAFF
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  IN_TRANSIT
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  RAZORPAY
+  STRIPE
+  CASH_ON_DELIVERY
+}
+
+enum ProductCategory {
+  OVERSIZED
+  JEANS
+  BOXY_FIT
+  JACKETS
+}
+
+// ----------------------------------------------------
+// 1. IDENTITY & CUSTOMER ACCOUNTS
+// ----------------------------------------------------
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  passwordHash  String?
+  name          String?
+  phone         String?
+  role          Role         @default(CUSTOMER)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  addresses     Address[]
+  orders        Order[]
+  cart          Cart?
+  wishlist      WishlistItem[]
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String?  // e.g. "Primary Residence", "Studio"
+  fullName    String
+  phone       String?
+  street      String
+  apartment   String?
+  city        String
+  state       String?
+  postalCode  String
+  country     String   @default("IN")
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  orders      Order[]
+
+  @@map("addresses")
+}
+
+// ----------------------------------------------------
+// 2. PRODUCT CATALOG & INVENTORY
+// ----------------------------------------------------
+
+model Product {
+  id               String          @id @default(cuid())
+  slug             String          @unique
+  name             String
+  subtitle         String?
+  category         ProductCategory
+  description      String          @db.Text
+  fabric           String          // e.g. "320gsm Heavyweight Combed Cotton"
+  careInstructions String[]
+  details          String[]
+  basePrice        Int             // Stored in minor units (e.g. 16000 for $160.00 / Rs 16000)
+  originalPrice    Int?
+  featured         Boolean         @default(false)
+  isNew            Boolean         @default(false)
+  isBestSeller     Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  variants         ProductVariant[]
+  images           ProductImage[]
+  wishlistItems    WishlistItem[]
+
+  @@index([category])
+  @@index([featured])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+
+  @@map("product_images")
+}
+
+model ProductVariant {
+  id          String     @id @default(cuid())
+  productId   String
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size        String     // e.g. "S", "M", "L", "XL", "32", "34"
+  colorName   String     // e.g. "Deep Burgundy"
+  colorHex    String     // e.g. "#4A1216"
+  sku         String     @unique
+  priceDelta  Int        @default(0) // Additional price in minor units if any
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  inventory   Inventory?
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+
+  @@unique([productId, size, colorName])
+  @@map("product_variants")
+}
+
+model Inventory {
+  id          String         @id @default(cuid())
+  variantId   String         @unique
+  variant     ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  quantity    Int            @default(0)
+  reservedQty Int            @default(0) // Quantity locked in active pending checkouts
+  updatedAt   DateTime       @updatedAt
+
+  @@map("inventory")
+}
+
+// ----------------------------------------------------
+// 3. CART & WISHLIST
+// ----------------------------------------------------
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String?    @unique
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId String?    @unique // For anonymous guest carts
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  items     CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String         @id @default(cuid())
+  cartId    String
+  cart      Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  quantity  Int            @default(1)
+
+  @@unique([cartId, variantId])
+  @@map("cart_items")
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("wishlist_items")
+}
+
+// ----------------------------------------------------
+// 4. ORDERS & PAYMENTS
+// ----------------------------------------------------
+
+model Order {
+  id                String          @id @default(cuid())
+  orderNumber       String          @unique // e.g. "TS-2026-0842"
+  userId            String?
+  user              User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  shippingAddressId String
+  shippingAddress   Address         @relation(fields: [shippingAddressId], references: [id], onDelete: Restrict)
+  status            OrderStatus     @default(PENDING)
+  currency          String          @default("INR") // "INR" or "USD"
+  subtotal          Int             // Minor units
+  discountAmount    Int             @default(0)
+  shippingAmount    Int             @default(0)
+  taxAmount         Int             @default(0)
+  totalAmount       Int             // Minor units
+  promoCode         String?
+  trackingNumber    String?
+  deliveryCourier   String?
+  estimatedDelivery DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  items             OrderItem[]
+  payments          Payment[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([orderNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String         @id @default(cuid())
+  orderId     String
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId   String
+  variant     ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  unitPrice   Int            // Price captured at checkout time (minor units)
+  quantity    Int
+  totalPrice  Int            // unitPrice * quantity
+
+  @@map("order_items")
+}
+
+model Payment {
+  id               String          @id @default(cuid())
+  orderId          String
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider         PaymentProvider
+  gatewayOrderId   String?         @unique // Razorpay order_id or Stripe payment_intent_id
+  gatewayPaymentId String?         @unique // Razorpay payment_id or Stripe charge_id
+  gatewaySignature String?         // For signature verification
+  amount           Int             // Minor units
+  currency         String
+  status           PaymentStatus   @default(PENDING)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@map("payments")
+}
+
+// ----------------------------------------------------
+// 5. PROMOTIONS & MARKETING
+// ----------------------------------------------------
+
+model Coupon {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  discountPercent Int
+  description     String?
+  active          Boolean  @default(true)
+  minSpend        Int      @default(0)
+  maxUses         Int?
+  usedCount       Int      @default(0)
+  expiresAt       DateTime?
+
+  @@map("coupons")
+}
+
+// ----------------------------------------------------
+// 6. DYNAMIC CMS & SITE SETTINGS
+// ----------------------------------------------------
+
+model SiteSettings {
+  id                 String   @id @default("global")
+  storeName          String   @default("Trend Street")
+  storeTagline       String   @default("The Style Hub")
+  announcementText   String?
+  announcementLink   String?
+  announcementActive Boolean  @default(true)
+  heroTitle1         String   @default("Oversized Silhouettes.")
+  heroTitle2         String   @default("Modern Distinction.")
+  heroSubtitle       String   @db.Text
+  heroBadge          String   @default("Autumn / Winter 2026 Drops")
+  heroPrimaryCta     String   @default("/shop")
+  heroSecondaryCta   String   @default("/lookbook")
+  marqueeText        String[]
+  conciergePhone     String   @default("+91 98200 12345")
+  conciergeEmail     String   @default("concierge@trendstreet.in")
+  updatedAt          DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ----------------------------------------------------
+// 7. COMPLIANCE & PRIVILEGED AUDIT LOGS
+// ----------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String   // e.g. "PRODUCT_CREATE", "ORDER_STATUS_UPDATE", "SETTINGS_CHANGE"
+  entityType String   // e.g. "Product", "Order", "SiteSettings"
+  entityId   String?
+  metadata   Json?    // Snapshot of previous and updated values
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

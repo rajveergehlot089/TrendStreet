@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   Bell,
+  Sliders,
 } from "lucide-react";
 import { useAdminAuth } from "@/context/AdminAuthContext";
 import { Logo } from "@/components/Logo";
@@ -62,6 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: "Dashboard Overview", href: "/admin", icon: LayoutDashboard },
     { label: "Products Catalog (CRUD)", href: "/admin/products", icon: Shirt },
     { label: "Orders Fulfillment", href: "/admin/orders", icon: Package },
+    { label: "Site Customizer (Live)", href: "/admin/settings", icon: Sliders },
     { label: "Admin Access Register", href: "/admin/access-register", icon: ShieldAlert },
   ];
 
