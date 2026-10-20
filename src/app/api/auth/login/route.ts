@@ -50,8 +50,8 @@ export async function POST(req: NextRequest) {
     // Secondary verification against Supabase PostgreSQL database if available
     if (!isAuthenticatedAdmin) {
       try {
-        const { PrismaClient, Role } = await import("@prisma/client");
-        const prisma = new PrismaClient();
+        const { prisma } = await import("@/lib/prisma");
+        const { Role } = await import("@prisma/client");
         const dbUser = await prisma.user.findFirst({
           where: {
             OR: [
@@ -62,18 +62,15 @@ export async function POST(req: NextRequest) {
           },
         });
 
+        const { timingSafeEqualStr } = await import("@/lib/auth");
         if (
           dbUser &&
-          (dbUser.passwordHash === trimmedPass ||
-            trimmedPass === "radhasolanki" ||
-            trimmedPass.toLowerCase() === "radhasolanki" ||
-            (process.env.ADMIN_PASSWORD && trimmedPass === process.env.ADMIN_PASSWORD.trim()))
+          dbUser.passwordHash &&
+          timingSafeEqualStr(trimmedPass, dbUser.passwordHash)
         ) {
           isAuthenticatedAdmin = true;
           resolvedEmail = dbUser.email;
         }
-
-        await prisma.$disconnect();
       } catch (dbErr) {
         // Fallback silently if DB is in cold start
       }

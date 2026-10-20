@@ -143,6 +143,12 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         }
       } catch (err) {
         console.error("Session verification error:", err);
+        setIsAuthenticated(false);
+        setAdminEmail(null);
+        try {
+          localStorage.removeItem("ts_admin_authenticated");
+          localStorage.removeItem("ts_admin_email");
+        } catch (_) {}
       } finally {
         setIsLoading(false);
         setIsHydrated(true);

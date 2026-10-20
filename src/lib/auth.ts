@@ -116,8 +116,22 @@ export async function verifySessionToken(token: string | undefined): Promise<Ses
 }
 
 /**
+ * Constant-time string equality to prevent timing attacks.
+ * Universal implementation compatible with Node.js and Edge Runtime.
+ */
+export function timingSafeEqualStr(a: string, b: string): boolean {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  if (a.length !== b.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+/**
  * Validates administrative credentials against configured environment variables and supported aliases.
- * Supports case-insensitivity on usernames and resilience to mobile auto-capitalization on passwords.
+ * Strictly enforces constant-time case-sensitive password checks without backdoors or email wildcards.
  */
 export function validateAdminCredentials(
   id: string | unknown,
@@ -133,15 +147,20 @@ export function validateAdminCredentials(
   const configuredAdminEmail = (
     process.env.ADMIN_EMAIL ||
     process.env.ADMIN_INITIAL_EMAIL ||
-    "sujal@trendstreet.com"
+    (process.env.NODE_ENV === "production" ? "" : "sujal@trendstreet.com")
   ).toLowerCase().trim();
 
   const configuredAdminPass = (
     process.env.ADMIN_PASSWORD ||
     process.env.ADMIN_INITIAL_PASSWORD ||
-    "radhasolanki"
+    (process.env.NODE_ENV === "production" ? "" : "radhasolanki")
   ).trim();
 
+  if (!configuredAdminEmail || !configuredAdminPass) {
+    return { isValid: false, email: "" };
+  }
+
+  // Exact allowed identifiers only - NO wildcard email prefixes
   const allowedIds = new Set([
     "sujal",
     "admin",
@@ -150,45 +169,17 @@ export function validateAdminCredentials(
     "sujal@trendstreet.com",
     "sujal@trendstreet.in",
     "sujal@.com",
-    "sujal@gmail.com",
-    "admin@trendstreet.com",
-    "admin@trendstreet.in",
-    "trendstreet",
-    "trend-street",
-    "root",
-    "owner",
     configuredAdminEmail,
   ]);
 
-  const isIdValid =
-    allowedIds.has(trimmedId) ||
-    trimmedId === "sujal" ||
-    trimmedId === "admin" ||
-    trimmedId.startsWith("sujal@") ||
-    trimmedId.startsWith("admin@") ||
-    trimmedId === configuredAdminEmail;
+  const isIdValid = allowedIds.has(trimmedId);
 
-  const allowedPasswords = new Set(
-    [
-      configuredAdminPass,
-      configuredAdminPass.toLowerCase(),
-      "radhasolanki",
-      process.env.ADMIN_PASSWORD?.trim(),
-      process.env.ADMIN_PASSWORD?.trim().toLowerCase(),
-      process.env.ADMIN_INITIAL_PASSWORD?.trim(),
-      process.env.ADMIN_INITIAL_PASSWORD?.trim().toLowerCase(),
-    ].filter(Boolean) as string[]
-  );
-
-  const isPassValid =
-    allowedPasswords.has(trimmedPass) ||
-    allowedPasswords.has(trimmedPass.toLowerCase()) ||
-    trimmedPass === "radhasolanki" ||
-    trimmedPass.toLowerCase() === "radhasolanki";
+  // Constant-time case-sensitive password comparison
+  const isPassValid = timingSafeEqualStr(trimmedPass, configuredAdminPass);
 
   const resolvedEmail = trimmedId.includes("@")
     ? trimmedId
-    : (configuredAdminEmail || "sujal@trendstreet.com");
+    : configuredAdminEmail;
 
   return {
     isValid: isIdValid && isPassValid,
