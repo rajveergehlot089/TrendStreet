@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { signSessionToken, verifySessionToken } from "../../src/lib/auth";
+import { signSessionToken, verifySessionToken, validateAdminCredentials } from "../../src/lib/auth";
 
 test("auth - signs and verifies valid session tokens", async () => {
   const email = "concierge@trendstreet.com";
@@ -40,3 +40,39 @@ test("auth - rejects null or empty tokens gracefully without throwing", async ()
   const garbageResult = await verifySessionToken("not-a-valid-token-format");
   assert.equal(garbageResult, null);
 });
+
+test("auth - validateAdminCredentials accepts standard admin aliases", () => {
+  const aliases = [
+    "sujal",
+    "Sujal",
+    "SUJAL",
+    "admin",
+    "ADMIN",
+    "sujal@trendstreet.com",
+    "sujal@.com",
+    "sujalsolanki",
+    "trendstreet",
+  ];
+
+  for (const alias of aliases) {
+    const res = validateAdminCredentials(alias, "radhasolanki");
+    assert.equal(res.isValid, true, `Expected valid login for alias: ${alias}`);
+    assert.equal(typeof res.email, "string");
+    assert.equal(res.email.length > 0, true);
+  }
+});
+
+test("auth - validateAdminCredentials is resilient to mobile auto-capitalization on passwords", () => {
+  // Mobile devices frequently auto-capitalize the first character
+  const capitalizedPass = "Radhasolanki";
+  const res = validateAdminCredentials("sujal", capitalizedPass);
+  assert.equal(res.isValid, true, "Should accept auto-capitalized password");
+});
+
+test("auth - validateAdminCredentials rejects invalid credentials", () => {
+  assert.equal(validateAdminCredentials("unknown_user", "radhasolanki").isValid, false);
+  assert.equal(validateAdminCredentials("sujal", "wrong_password_123").isValid, false);
+  assert.equal(validateAdminCredentials("", "").isValid, false);
+  assert.equal(validateAdminCredentials(null, undefined).isValid, false);
+});
+

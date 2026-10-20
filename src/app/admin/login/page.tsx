@@ -9,7 +9,7 @@ import { useAdminAuth } from "@/context/AdminAuthContext";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated } = useAdminAuth();
+  const { login, isAuthenticated, isLoading } = useAdminAuth();
 
   const [adminId, setAdminId] = useState("");
   const [password, setPassword] = useState("");
@@ -17,12 +17,12 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // If already authenticated, redirect safely via useEffect
+  // If already authenticated, redirect safely once session check finishes
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isLoading && isAuthenticated) {
       window.location.href = "/admin";
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +80,9 @@ export default function AdminLoginPage() {
                   onChange={(e) => setAdminId(e.target.value)}
                   placeholder="Enter Admin ID or Email"
                   autoComplete="username"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   className="w-full bg-white pl-10 pr-3 py-2.5 rounded-xl border border-burgundy/20 text-xs font-medium text-espresso focus:outline-none focus:border-burgundy"
                 />
               </div>
@@ -99,19 +102,22 @@ export default function AdminLoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter Password"
                   autoComplete="current-password"
-                  className="w-full bg-white pl-10 pr-10 py-2.5 rounded-xl border border-burgundy/20 text-xs font-medium text-espresso focus:outline-none focus:border-burgundy"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  className="w-full bg-white pl-10 pr-11 py-2.5 rounded-xl border border-burgundy/20 text-xs font-medium text-espresso focus:outline-none focus:border-burgundy"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 p-1 text-espresso/50 hover:text-burgundy transition-colors focus:outline-none"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  title={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-2.5 top-2 p-1 text-espresso/50 hover:text-burgundy transition-colors focus:outline-none rounded-lg hover:bg-espresso/5"
+                  aria-label={showPassword ? "Hide password" : "Show password (seen password)"}
+                  title={showPassword ? "Hide password" : "Show password (seen password)"}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-4 h-4 text-burgundy" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-4 h-4 text-espresso/60" />
                   )}
                 </button>
               </div>

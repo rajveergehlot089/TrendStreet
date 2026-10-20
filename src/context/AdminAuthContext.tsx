@@ -5,6 +5,7 @@ import { AdminAccessRecord } from "@/types/store";
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   adminEmail: string | null;
   adminName: string;
   login: (id: string, pass: string) => Promise<{ success: boolean; message: string }>;
@@ -94,12 +95,24 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [adminEmail, setAdminEmail] = useState<string | null>(null);
   const [accessRegister, setAccessRegister] = useState<AdminAccessRecord[]>(INITIAL_ACCESS_REGISTER);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
   // Synchronize authentication status with server-side HTTP-only session cookie
   useEffect(() => {
+    // 1. Instant optimistic check from localStorage to eliminate route bouncing
+    try {
+      const cachedAuth = localStorage.getItem("ts_admin_authenticated");
+      const cachedEmail = localStorage.getItem("ts_admin_email");
+      if (cachedAuth === "true") {
+        setIsAuthenticated(true);
+        if (cachedEmail) setAdminEmail(cachedEmail);
+      }
+    } catch (_) {}
+
+    // 2. Authoritative check with server
     const checkServerSession = async () => {
       try {
         const res = await fetch("/api/auth/session");
@@ -108,14 +121,30 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           if (data.authenticated && data.email) {
             setIsAuthenticated(true);
             setAdminEmail(data.email);
+            try {
+              localStorage.setItem("ts_admin_authenticated", "true");
+              localStorage.setItem("ts_admin_email", data.email);
+            } catch (_) {}
           } else {
             setIsAuthenticated(false);
             setAdminEmail(null);
+            try {
+              localStorage.removeItem("ts_admin_authenticated");
+              localStorage.removeItem("ts_admin_email");
+            } catch (_) {}
           }
+        } else {
+          setIsAuthenticated(false);
+          setAdminEmail(null);
+          try {
+            localStorage.removeItem("ts_admin_authenticated");
+            localStorage.removeItem("ts_admin_email");
+          } catch (_) {}
         }
       } catch (err) {
         console.error("Session verification error:", err);
       } finally {
+        setIsLoading(false);
         setIsHydrated(true);
       }
     };
@@ -155,6 +184,10 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (res.ok && data.success) {
         setIsAuthenticated(true);
         setAdminEmail(data.email);
+        try {
+          localStorage.setItem("ts_admin_authenticated", "true");
+          localStorage.setItem("ts_admin_email", data.email || "");
+        } catch (_) {}
         return {
           success: true,
           message: data.message || "Authentication successful.",
@@ -183,6 +216,10 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     } finally {
       setIsAuthenticated(false);
       setAdminEmail(null);
+      try {
+        localStorage.removeItem("ts_admin_authenticated");
+        localStorage.removeItem("ts_admin_email");
+      } catch (_) {}
     }
   };
 
@@ -208,6 +245,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <AdminAuthContext.Provider
       value={{
         isAuthenticated,
+        isLoading,
         adminEmail,
         adminName: "Sujal Solanki",
         login,

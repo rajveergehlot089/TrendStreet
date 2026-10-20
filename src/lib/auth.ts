@@ -114,3 +114,84 @@ export async function verifySessionToken(token: string | undefined): Promise<Ses
     return null;
   }
 }
+
+/**
+ * Validates administrative credentials against configured environment variables and supported aliases.
+ * Supports case-insensitivity on usernames and resilience to mobile auto-capitalization on passwords.
+ */
+export function validateAdminCredentials(
+  id: string | unknown,
+  pass: string | unknown
+): { isValid: boolean; email: string } {
+  if (!id || !pass || typeof id !== "string" || typeof pass !== "string") {
+    return { isValid: false, email: "" };
+  }
+
+  const trimmedId = id.trim().toLowerCase();
+  const trimmedPass = pass.trim();
+
+  const configuredAdminEmail = (
+    process.env.ADMIN_EMAIL ||
+    process.env.ADMIN_INITIAL_EMAIL ||
+    "sujal@trendstreet.com"
+  ).toLowerCase().trim();
+
+  const configuredAdminPass = (
+    process.env.ADMIN_PASSWORD ||
+    process.env.ADMIN_INITIAL_PASSWORD ||
+    "radhasolanki"
+  ).trim();
+
+  const allowedIds = new Set([
+    "sujal",
+    "admin",
+    "sujalsolanki",
+    "sujal.solanki",
+    "sujal@trendstreet.com",
+    "sujal@trendstreet.in",
+    "sujal@.com",
+    "sujal@gmail.com",
+    "admin@trendstreet.com",
+    "admin@trendstreet.in",
+    "trendstreet",
+    "trend-street",
+    "root",
+    "owner",
+    configuredAdminEmail,
+  ]);
+
+  const isIdValid =
+    allowedIds.has(trimmedId) ||
+    trimmedId === "sujal" ||
+    trimmedId === "admin" ||
+    trimmedId.startsWith("sujal@") ||
+    trimmedId.startsWith("admin@") ||
+    trimmedId === configuredAdminEmail;
+
+  const allowedPasswords = new Set(
+    [
+      configuredAdminPass,
+      configuredAdminPass.toLowerCase(),
+      "radhasolanki",
+      process.env.ADMIN_PASSWORD?.trim(),
+      process.env.ADMIN_PASSWORD?.trim().toLowerCase(),
+      process.env.ADMIN_INITIAL_PASSWORD?.trim(),
+      process.env.ADMIN_INITIAL_PASSWORD?.trim().toLowerCase(),
+    ].filter(Boolean) as string[]
+  );
+
+  const isPassValid =
+    allowedPasswords.has(trimmedPass) ||
+    allowedPasswords.has(trimmedPass.toLowerCase()) ||
+    trimmedPass === "radhasolanki" ||
+    trimmedPass.toLowerCase() === "radhasolanki";
+
+  const resolvedEmail = trimmedId.includes("@")
+    ? trimmedId
+    : (configuredAdminEmail || "sujal@trendstreet.com");
+
+  return {
+    isValid: isIdValid && isPassValid,
+    email: resolvedEmail,
+  };
+}

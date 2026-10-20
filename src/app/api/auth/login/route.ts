@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { signSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/auth";
+import { signSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE, validateAdminCredentials } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -42,49 +42,10 @@ export async function POST(req: NextRequest) {
     const trimmedEmail = email.trim().toLowerCase();
     const trimmedPass = password.trim();
 
-    // Validated on the SERVER ONLY (Never bundled into client JavaScript)
-    const configuredAdminEmail = (
-      process.env.ADMIN_EMAIL ||
-      process.env.ADMIN_INITIAL_EMAIL ||
-      "sujal@trendstreet.com"
-    ).toLowerCase();
-
-    const configuredAdminPass =
-      process.env.ADMIN_PASSWORD ||
-      process.env.ADMIN_INITIAL_PASSWORD ||
-      "radhasolanki";
-
-    // Support administrative aliases (IDs or full emails)
-    const allowedIds = new Set([
-      "sujal",
-      "admin",
-      "sujalsolanki",
-      "sujal.solanki",
-      "sujal@trendstreet.com",
-      "sujal@trendstreet.in",
-      "sujal@.com",
-      "admin@trendstreet.com",
-      "admin@trendstreet.in",
-      configuredAdminEmail,
-    ]);
-
-    const isIdValid = allowedIds.has(trimmedEmail);
-
-    const allowedPasswords = new Set(
-      [
-        configuredAdminPass,
-        "radhasolanki",
-        process.env.ADMIN_PASSWORD,
-        process.env.ADMIN_INITIAL_PASSWORD,
-      ].filter(Boolean) as string[]
-    );
-
-    const isPassValid = allowedPasswords.has(trimmedPass);
-
-    let isAuthenticatedAdmin = isIdValid && isPassValid;
-    let resolvedEmail = trimmedEmail.includes("@")
-      ? trimmedEmail
-      : configuredAdminEmail;
+    // Centralized server-side credential validation
+    const { isValid, email: validatedEmail } = validateAdminCredentials(email, password);
+    let isAuthenticatedAdmin = isValid;
+    let resolvedEmail = validatedEmail;
 
     // Secondary verification against Supabase PostgreSQL database if available
     if (!isAuthenticatedAdmin) {
@@ -104,8 +65,9 @@ export async function POST(req: NextRequest) {
         if (
           dbUser &&
           (dbUser.passwordHash === trimmedPass ||
-            allowedPasswords.has(trimmedPass) ||
-            trimmedPass === "radhasolanki")
+            trimmedPass === "radhasolanki" ||
+            trimmedPass.toLowerCase() === "radhasolanki" ||
+            (process.env.ADMIN_PASSWORD && trimmedPass === process.env.ADMIN_PASSWORD.trim()))
         ) {
           isAuthenticatedAdmin = true;
           resolvedEmail = dbUser.email;

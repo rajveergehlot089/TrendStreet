@@ -23,20 +23,34 @@ import { Logo } from "@/components/Logo";
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, adminName, adminEmail, logout } = useAdminAuth();
+  const { isAuthenticated, isLoading, adminName, adminEmail, logout } = useAdminAuth();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // If on /admin/login, bypass layout wrapper
   const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    if (!isLoginPage && !isAuthenticated) {
+    if (!isLoginPage && !isLoading && !isAuthenticated) {
       router.push("/admin/login");
     }
-  }, [isAuthenticated, isLoginPage, router]);
+  }, [isAuthenticated, isLoading, isLoginPage, router]);
 
   if (isLoginPage) {
     return <>{children}</>;
+  }
+
+  // Display luxury preloader while verifying credentials to prevent bouncing
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-espresso flex items-center justify-center p-4">
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs uppercase tracking-[0.25em] text-gold font-bold">
+            Verifying Atelier Privileges...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
