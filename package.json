@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "tsc tests/unit/*.test.ts src/lib/pricing.ts src/lib/auth.ts src/lib/pincode.ts src/lib/razorpay.ts src/lib/email.ts --outDir .test-dist --module commonjs --target es2020 --esModuleInterop --skipLibCheck && node --test .test-dist/tests/unit/*.test.js",
+    "test": "tsc tests/unit/auth.test.ts tests/unit/email.test.ts tests/unit/pincode.test.ts tests/unit/pricing.test.ts tests/unit/razorpay.test.ts src/lib/pricing.ts src/lib/auth.ts src/lib/pincode.ts src/lib/razorpay.ts src/lib/email.ts --outDir .test-dist --module commonjs --target es2020 --esModuleInterop --skipLibCheck && node --test .test-dist/tests/unit/auth.test.js .test-dist/tests/unit/email.test.js .test-dist/tests/unit/pincode.test.js .test-dist/tests/unit/pricing.test.js .test-dist/tests/unit/razorpay.test.js",
     "test:integrations": "tsx scripts/test-integrations.ts"
   },
   "dependencies": {

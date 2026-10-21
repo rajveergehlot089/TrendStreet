@@ -98,3 +98,25 @@ test("formatMinorUnits & formatPrice - correctly formats INR with en-IN numberin
   const formattedLakh = formatMinorUnits(12500000, "INR"); // ₹1,25,000
   assert.match(formattedLakh, /1,25,000/);
 });
+
+test("calculateOrderPricing - GST is included in the price, never added on top", () => {
+  const items: PricingItem[] = [
+    { id: "ts-001", name: "Mayfair Oversized Tee", unitPriceMinor: 249900, quantity: 1, size: "M", color: "Deep Burgundy" },
+  ];
+  const result = calculateOrderPricing(items);
+  // ₹2,499 tee with free shipping costs exactly ₹2,499
+  assert.equal(result.totalMinor, 249900);
+  // Embedded 12% GST: 249900 * 1200 / 11200 = 26775 paise
+  assert.equal(result.taxMinor, 26775);
+});
+
+test("calculateOrderPricing - BUNDLE15 is honoured server-side", () => {
+  const items: PricingItem[] = [
+    { id: "ts-001", name: "Tee", unitPriceMinor: 249900, quantity: 1, size: "M", color: "Black" },
+    { id: "ts-004", name: "Denim", unitPriceMinor: 549900, quantity: 1, size: "32", color: "Indigo" },
+  ];
+  const result = calculateOrderPricing(items, { promoCode: "bundle15" });
+  assert.equal(result.promoCodeApplied, "BUNDLE15");
+  assert.equal(result.discountMinor, 119970);
+  assert.equal(result.totalMinor, 799800 - 119970);
+});

@@ -25,6 +25,7 @@ export interface PricingSummary {
   subtotalMinor: number;
   discountMinor: number;
   shippingMinor: number;
+  /** GST already contained in the (tax-inclusive) prices — informational, never added on top. */
   taxMinor: number;
   totalMinor: number;
   promoCodeApplied: string | null;
@@ -36,6 +37,7 @@ export interface PricingSummary {
 export const VALID_PROMO_CODES: Record<string, { percent: number; description: string; minSpendMinor: number }> = {
   TREND10: { percent: 10, description: "10% off inaugural order over ₹1,999", minSpendMinor: 199900 },
   STREET20: { percent: 20, description: "20% off seasonal drop orders over ₹3,999", minSpendMinor: 399900 },
+  BUNDLE15: { percent: 15, description: "15% off complete outfit bundles", minSpendMinor: 0 },
   VIP15: { percent: 15, description: "15% VIP atelier patron discount over ₹2,499", minSpendMinor: 249900 },
   FREESHIP: { percent: 0, description: "Complimentary priority shipping on all orders", minSpendMinor: 0 },
 };
@@ -106,11 +108,12 @@ export function calculateOrderPricing(
   const baseShipping = SHIPPING_RATES_MINOR[deliveryMethod] || SHIPPING_RATES_MINOR.standard;
   const shippingMinor = isFreeShipping ? 0 : baseShipping;
 
-  // 4. Tax calculation (applied on discounted goods)
-  const taxMinor = Math.round((discountedSubtotalMinor * taxRateBps) / 10000);
+  // 4. GST is included in listed prices (Consumer Protection rules: displayed price is all-inclusive).
+  //    Extract the embedded component for invoices: tax = gross * rate / (1 + rate).
+  const taxMinor = Math.round((discountedSubtotalMinor * taxRateBps) / (10000 + taxRateBps));
 
-  // 5. Total
-  const totalMinor = discountedSubtotalMinor + shippingMinor + taxMinor;
+  // 5. Total — the customer pays exactly the displayed prices, less discount, plus shipping
+  const totalMinor = discountedSubtotalMinor + shippingMinor;
 
   return {
     currency,

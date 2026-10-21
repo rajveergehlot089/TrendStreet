@@ -309,7 +309,7 @@ export default function BagPage() {
                   <span>256-Bit SSL Encrypted Checkout</span>
                 </div>
                 <p>
-                  Prices shown are inclusive of all statutory Indian taxes (12% GST) and express doorstep delivery.
+                  Prices shown include 12% GST. Delivery is free on bags over ₹1,999.
                 </p>
               </div>
             </div>

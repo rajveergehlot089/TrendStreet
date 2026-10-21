@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Product, CartItem, Order, UserProfile, OrderStatus, SiteSettings } from "@/types/store";
 import { INITIAL_PRODUCTS } from "@/data/products";
+import { calculateOrderPricing, VALID_PROMO_CODES } from "@/lib/pricing";
 
 interface StoreContextType {
   products: Product[];
@@ -27,7 +28,12 @@ interface StoreContextType {
   isInWishlist: (productId: string) => boolean;
   applyPromoCode: (code: string) => { success: boolean; message: string };
   removePromoCode: () => void;
-  createOrder: (orderInput: Omit<Order, "id" | "orderNumber" | "createdAt" | "status" | "trackingNumber" | "estimatedDelivery">) => Order;
+  createOrder: (
+    orderInput: Omit<Order, "id" | "orderNumber" | "createdAt" | "status" | "trackingNumber" | "estimatedDelivery"> & {
+      orderNumber: string;
+      status?: OrderStatus;
+    }
+  ) => Order;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
   addProduct: (product: Omit<Product, "id" | "rating" | "reviewsCount" | "reviews">) => Product;
   updateProduct: (product: Product) => void;
@@ -345,11 +351,16 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const applyPromoCode = (code: string): { success: boolean; message: string } => {
     const cleanCode = code.trim().toUpperCase();
-    const found = siteSettings.promoCodes.find((p) => p.code.toUpperCase() === cleanCode);
+    // Only codes the server honours can be applied, so the bag never promises a discount checkout won't give.
+    const found = VALID_PROMO_CODES[cleanCode];
     if (found) {
-      setPromoCode(found.code);
-      setDiscountRate(found.discountPercent / 100);
-      return { success: true, message: `${found.description} (${found.discountPercent}% off applied)` };
+      const minSpend = found.minSpendMinor / 100;
+      if (cartSubtotal < minSpend) {
+        return { success: false, message: `${cleanCode} needs a bag of ₹${minSpend.toLocaleString("en-IN")} or more.` };
+      }
+      setPromoCode(cleanCode);
+      setDiscountRate(found.percent / 100);
+      return { success: true, message: found.percent > 0 ? `${found.description} (${found.percent}% off applied)` : found.description };
     }
     return { success: false, message: "Invalid promo code. Please check your spelling or contact concierge." };
   };
@@ -375,20 +386,22 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const createOrder = (
-    orderInput: Omit<Order, "id" | "orderNumber" | "createdAt" | "status" | "trackingNumber" | "estimatedDelivery">
+    orderInput: Omit<Order, "id" | "orderNumber" | "createdAt" | "status" | "trackingNumber" | "estimatedDelivery"> & {
+      orderNumber: string;
+      status?: OrderStatus;
+    }
   ): Order => {
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
     const date = new Date();
     const estDate = new Date();
     estDate.setDate(date.getDate() + 3);
 
     const newOrder: Order = {
       ...orderInput,
-      id: `ord-${Date.now()}`,
-      orderNumber: `TS-${date.getFullYear()}-${randomSuffix}`,
+      // Local receipt copy of a server-saved order — the order number comes from the database.
+      id: orderInput.orderNumber,
       createdAt: date.toISOString(),
-      status: "Confirmed",
-      trackingNumber: `TS-TRACK-${randomSuffix}-GB`,
+      status: orderInput.status ?? "Confirmed",
+      trackingNumber: "Assigned at dispatch",
       estimatedDelivery: estDate.toISOString().split("T")[0],
     };
 
@@ -441,11 +454,23 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   // Calculations
-  const cartSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const cartDiscount = Math.round(cartSubtotal * discountRate);
-  const cartShipping = cartSubtotal >= 200 || cartSubtotal === 0 ? 0 : 25;
-  const cartTax = Math.round((cartSubtotal - cartDiscount) * 0.08 * 100) / 100;
-  const cartTotal = Math.max(0, cartSubtotal - cartDiscount + cartShipping + cartTax);
+  // Same engine the server uses (src/lib/pricing.ts), so the bag total always matches what checkout charges.
+  const pricing = calculateOrderPricing(
+    cart.map((item) => ({
+      id: item.product.id,
+      name: item.product.name,
+      unitPriceMinor: Math.round(item.product.price * 100),
+      quantity: item.quantity,
+      size: item.selectedSize,
+      color: item.selectedColor,
+    })),
+    { promoCode, deliveryMethod: "standard", currency: "INR" }
+  );
+  const cartSubtotal = pricing.subtotalMinor / 100;
+  const cartDiscount = pricing.discountMinor / 100;
+  const cartShipping = pricing.shippingMinor / 100;
+  const cartTax = pricing.taxMinor / 100; // GST included in prices — shown, not added
+  const cartTotal = pricing.totalMinor / 100;
   const cartItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (

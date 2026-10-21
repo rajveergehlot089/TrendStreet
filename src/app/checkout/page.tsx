@@ -19,7 +19,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
-import { formatPrice } from "@/lib/pricing";
+import { formatPrice, calculateOrderPricing } from "@/lib/pricing";
 import { checkPincodeServiceability, PincodeServiceability } from "@/lib/pincode";
 
 const INDIAN_STATES_AND_UTS = [
@@ -78,11 +78,6 @@ export default function CheckoutPage() {
   const router = useRouter();
   const {
     cart,
-    cartSubtotal,
-    cartDiscount,
-    cartShipping,
-    cartTax,
-    cartTotal,
     promoCode,
     createOrder,
     user,
@@ -94,26 +89,45 @@ export default function CheckoutPage() {
 
   // Form State initialized with Indian defaults
   const [formData, setFormData] = useState({
-    fullName: user.name || "Aarav Sharma",
-    email: user.email || "aarav.sharma@trendstreet.in",
-    phone: user.phone || "+91 98200 12345",
-    address: user.savedAddresses[0]?.address || "Plot 42, Waterfield Road, Bandra West",
-    apartment: "Flat 402, Sea Pearl Apartments",
-    landmark: "Near Mehboob Studio",
-    city: user.savedAddresses[0]?.city || "Mumbai",
-    state: user.savedAddresses[0]?.state || "Maharashtra",
-    postalCode: user.savedAddresses[0]?.postalCode || "400050",
+    // Never pre-fill a stranger's details — only the shopper's own saved profile.
+    fullName: user.name || "",
+    email: user.email || "",
+    phone: user.phone || "",
+    address: user.savedAddresses[0]?.address || "",
+    apartment: "",
+    landmark: "",
+    city: user.savedAddresses[0]?.city || "",
+    state: user.savedAddresses[0]?.state || "",
+    postalCode: user.savedAddresses[0]?.postalCode || "",
     country: "India",
     deliveryMethod: "express" as "standard" | "express" | "vip_courier",
     paymentMethod: "upi" as "card" | "upi" | "netbanking" | "cod",
     upiApp: "gpay" as "gpay" | "phonepe" | "paytm" | "bhim" | "custom",
-    upiId: "aarav@oksbi",
-    cardNumber: "4532 •••• •••• 8912",
-    cardExp: "12/28",
-    cardCvv: "892",
-    cardName: "Aarav Sharma",
-    bankName: "HDFC Bank",
+    upiId: "",
+    cardNumber: "",
+    cardExp: "",
+    cardCvv: "",
+    cardName: "",
+    bankName: "",
   });
+
+  // Price with the delivery method actually chosen, using the same engine the server charges with.
+  const pricing = calculateOrderPricing(
+    cart.map((item) => ({
+      id: item.product.id,
+      name: item.product.name,
+      unitPriceMinor: Math.round(item.product.price * 100),
+      quantity: item.quantity,
+      size: item.selectedSize,
+      color: item.selectedColor,
+    })),
+    { promoCode, deliveryMethod: formData.deliveryMethod, currency: "INR" }
+  );
+  const cartSubtotal = pricing.subtotalMinor / 100;
+  const cartDiscount = pricing.discountMinor / 100;
+  const cartShipping = pricing.shippingMinor / 100;
+  const cartTax = pricing.taxMinor / 100;
+  const cartTotal = pricing.totalMinor / 100;
 
   const [step1Error, setStep1Error] = useState<string | null>(null);
   const [pincodeServiceability, setPincodeServiceability] = useState<PincodeServiceability | null>(null);
@@ -201,7 +215,8 @@ export default function CheckoutPage() {
     // 1. CASH ON DELIVERY (COD) DIRECT PROCESSING
     if (formData.paymentMethod === "cod") {
       try {
-        const response = await fetch("/api/checkout/validate", {
+        // Saved server-side: prices recomputed, order + items written to the database.
+        const response = await fetch("/api/orders/cod", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -211,16 +226,26 @@ export default function CheckoutPage() {
               color: item.selectedColor,
               quantity: item.quantity,
             })),
+            customer: {
+              fullName: formData.fullName,
+              email: formData.email,
+              phone: formData.phone,
+              address: formData.address,
+              apartment: formData.apartment,
+              landmark: formData.landmark,
+              city: formData.city,
+              state: formData.state,
+              postalCode: formData.postalCode,
+            },
             promoCode: promoCode || undefined,
             deliveryMethod: formData.deliveryMethod,
-            currency: "INR",
           }),
         });
 
-        const validationData = await response.json();
+        const codData = await response.json();
 
-        if (!response.ok || !validationData.success) {
-          setValidationError(validationData.error || "Order validation failed. Please review your cart.");
+        if (!response.ok || !codData.success) {
+          setValidationError(codData.error || "We couldn't place your order. Please try again.");
           setIsProcessing(false);
           return;
         }
@@ -236,12 +261,14 @@ export default function CheckoutPage() {
         }));
 
         const newOrder = createOrder({
+          orderNumber: codData.orderNumber,
+          status: "Pending",
           items: orderItems,
-          subtotal: cartSubtotal,
-          discount: cartDiscount,
-          shipping: cartShipping,
-          tax: cartTax,
-          total: cartTotal,
+          subtotal: codData.pricing.subtotalMinor / 100,
+          discount: codData.pricing.discountMinor / 100,
+          shipping: codData.pricing.shippingMinor / 100,
+          tax: codData.pricing.taxMinor / 100,
+          total: codData.pricing.totalMinor / 100,
           promoCode: promoCode || undefined,
           customer: {
             fullName: formData.fullName,
@@ -365,7 +392,13 @@ export default function CheckoutPage() {
               image: item.product.images[0],
             }));
 
+            if (!verifyData.saved) {
+              console.warn("Payment verified but order not saved; payment id:", paymentResponse.razorpay_payment_id);
+            }
+
             const newOrder = createOrder({
+              // If saving failed, the Razorpay payment id is the reference our team can trace.
+              orderNumber: verifyData.orderNumber || paymentResponse.razorpay_payment_id,
               items: orderItems,
               subtotal: cartSubtotal,
               discount: cartDiscount,
