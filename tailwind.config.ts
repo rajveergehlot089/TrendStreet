@@ -9,6 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        bone: "var(--color-bone)",
+        ink: "var(--color-ink)",
         burgundy: {
           DEFAULT: "#4A1216",
           dark: "#3B0E12",
@@ -43,7 +45,7 @@ const config: Config = {
           muted: "#EFE8E2",
         },
         gold: {
-          DEFAULT: "#C5A880",
+          DEFAULT: "#D2B07A",
           light: "#D8C09D",
           dark: "#A3865D",
           rich: "#D4AF37",
